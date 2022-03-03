@@ -7,20 +7,20 @@
     tools:context=".MainActivity">
 
     <!-- MPD XML Starter code Semester B Session 2020 2021 -->
-    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    <ScrollView
         android:layout_width="fill_parent" android:layout_height="fill_parent">
         <LinearLayout
-            xmlns:android="http://schemas.android.com/apk/res/android"
             android:orientation="vertical"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent">
+
             <TextView
                 android:id="@+id/salutation"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:textSize="20sp"
+                android:layout_height="128dp"
                 android:text="Welcome to Mobile Platform Development Assignment
-2021-2022"/>
+2021-2022"
+                android:textSize="20sp" />
 <!--            <Button-->
 <!--                android:id="@+id/startButton"-->
 <!--                android:layout_width="fill_parent"-->

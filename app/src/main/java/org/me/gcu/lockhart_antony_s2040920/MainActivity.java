@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener
     private String incidents ="https://trafficscotland.org/rss/feeds/currentincidents.aspx";
     private String feedUrl = "";
     private List<parseXML> parseXMLS = null;
+    private parseXML obj;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -52,11 +53,33 @@ public class MainActivity extends AppCompatActivity implements OnClickListener
         currentButton = (Button)findViewById(R.id.currentButton);
         listView = (ListView) findViewById(R.id.listView1);
 
-        startButton.setOnClickListener(this);
-        startButton.setOnClickListener(this);
-        startButton.setOnClickListener(this);
-        startButton.setOnClickListener(this);
-        Log.e("MyTag","after startButton");
+//        startButton.setOnClickListener(this);
+        incidentButton.setOnClickListener(new View.OnClickListener(){
+        @Override
+        public void onClick(View v) {
+            urlSource = incidents;
+            obj = new parseXML(urlSource);
+//            obj.fetchXML();
+        }
+    });
+        plannedButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                urlSource = planned;
+                obj = new parseXML(urlSource);
+//                obj.fetchXML();
+            }
+        });
+        currentButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                urlSource = current;
+                obj = new parseXML(urlSource);
+//                obj.fetchXML();
+            }
+        });
+
+//        Log.e("MyTag","after startButton");
         // More Code goes here
 
 
