@@ -36,11 +36,12 @@ public class MainActivity extends AppCompatActivity implements OnClickListener
     private String current ="https://trafficscotland.org/rss/feeds/roadworks.aspx";
     private String incidents ="https://trafficscotland.org/rss/feeds/currentincidents.aspx";
     private String feedUrl = "";
-    private List<parseXML> parseXMLS = null;
+    private List<parseXML> parseXMLS;
     private parseXML obj;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
+
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);

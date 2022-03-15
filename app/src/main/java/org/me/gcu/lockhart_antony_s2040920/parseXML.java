@@ -15,13 +15,13 @@ import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 
 public class parseXML {
-    private int id;
-    private String road;
-    private String description;
-    private String published;
-    private String location;
-    private String urlString;
-    private static final String ns = null;
+    public int id;
+    public String road;
+    public String description;
+    public String published;
+    public String location;
+    public String urlString;
+    public static final String ns = null;
 
 
 
@@ -124,20 +124,22 @@ public class parseXML {
     }
 
     public static class Item {
-        private int id;
-        private String road;
-        private String description;
-        private String published;
-        private String location;
-        private String link;
+        public int id;
+        public String road;
+        public String description;
+        public String published;
+        public String location;
+        public String link;
+        public String category;
 
-        private Item(String title, String description, String published, String location, String link) {
+        private Item(String title, String description, String published, String location, String link, String category) {
             this.id = Integer.parseInt(UUID.randomUUID().toString());
             this.road = title;
             this.description = description;
             this.published = published;
             this.location = location;
             this.link = link;
+            this.category = category;
         }
     }
 
@@ -151,6 +153,7 @@ public class parseXML {
         String published = null;
         String location = null;
         String link = null;
+        String category = null;
         while (parser.next() != XmlPullParser.END_TAG) {
             if (parser.getEventType() != XmlPullParser.START_TAG) {
                 continue;
@@ -166,7 +169,7 @@ public class parseXML {
                 skip(parser);
             }
         }
-        return new Item(road, description, published, location, link);
+        return new Item(road, description, published, location, link, category);
     }
 
     // Processes title tags in the feed.
