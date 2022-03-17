@@ -23,6 +23,9 @@ public class parseXML {
     public String urlString;
     public static final String ns = null;
 
+    public parseXML(String urlSource) {
+        this.urlString = urlSource;
+    }
 
 
     public List parse(InputStream in) throws XmlPullParserException, IOException {
@@ -36,73 +39,7 @@ public class parseXML {
             in.close();
         }
     }
-//    private String urlString = null;
-//    private XmlPullParserFactory xmlFactoryObject;
-//    public volatile boolean parsingComplete = true;
-//
-    public parseXML(String urlSource) {
-        urlString = urlSource;
-    }
-//
-//    public String getLink() {
-//        return link;
-//    }
-//
-//    public void setLink(String link) {
-//        this.link = link;
-//    }
-//
-//    private String link;
-//
-//    public String getUrlString() {
-//        return urlString;
-//    }
-//
-//    public void setUrlString(String urlString) {
-//        this.urlString = urlString;
-//    }
-//
-//
-//
-//    public int getId() {
-//        return id;
-//    }
-//
-//    public void setId(int id) {
-//        this.id = Integer.parseInt(UUID.randomUUID().toString());
-//    }
-//
-//    public String getRoad() {
-//        return road;
-//    }
-//
-//    public void setRoad(String road) {
-//        this.road = road;
-//    }
-//
-//    public String getDescription() {
-//        return description;
-//    }
-//
-//    public void setDescription(String description) {
-//        this.description = description;
-//    }
-//
-//    public String getPublished() {
-//        return published;
-//    }
-//
-//    public void setPublished(String published) {
-//        this.published = published;
-//    }
-//
-//    public String getLocation() {
-//        return location;
-//    }
-//
-//    public void setLocation(String location) {
-//        this.location = location;
-//    }
+
 
     private List readFeed(XmlPullParser parser) throws XmlPullParserException, IOException {
         List items = new ArrayList();
