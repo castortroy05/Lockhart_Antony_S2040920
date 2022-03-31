@@ -1,43 +1,50 @@
 package org.me.gcu.lockhart_antony_s2040920;
 
+
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.TextView;
+//import android.widget.TextView;
+
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.util.ArrayList;
 import java.util.List;
 
 
 import android.widget.ListView;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
+import org.xmlpull.v1.XmlPullParserException;
+
 import java.net.URL;
 import java.net.URLConnection;
 
 public class MainActivity extends AppCompatActivity implements OnClickListener
 {
-    private TextView rawDataDisplay;
+//    private TextView rawDataDisplay;
     private ListView listView;
+
     private Button startButton;
     private Button incidentButton;
     private Button plannedButton;
     private Button currentButton;
     private String result = "";
-    private String url1="";
-    // Traffic Scotland Planned Roadworks XML link
+//    private String url1="";
+    // Traffic Scotland Roadworks XML links
     private String urlSource="https://trafficscotland.org/rss/feeds/plannedroadworks.aspx";
     private String planned ="https://trafficscotland.org/rss/feeds/plannedroadworks.aspx";
     private String current ="https://trafficscotland.org/rss/feeds/roadworks.aspx";
     private String incidents ="https://trafficscotland.org/rss/feeds/currentincidents.aspx";
-    private String feedUrl = "";
-    private List<parseXML> parseXMLS;
-    private parseXML obj;
+//    private String feedUrl = "";
+    private ArrayList<pullParser.Item> items;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -50,14 +57,17 @@ public class MainActivity extends AppCompatActivity implements OnClickListener
         incidentButton = (Button)findViewById(R.id.incidentButton);
         plannedButton = (Button)findViewById(R.id.plannedButton);
         currentButton = (Button)findViewById(R.id.currentButton);
-        listView = (ListView) findViewById(R.id.listView1);
+        ListView listView = (ListView) findViewById(R.id.listView1);
 
 //        startButton.setOnClickListener(this);
         incidentButton.setOnClickListener(new View.OnClickListener(){
         @Override
         public void onClick(View v) {
+            Log.e("MyTag","in incident button");
             urlSource = incidents;
-            obj = new parseXML(urlSource);
+            startProgress(urlSource);
+            listView.refreshDrawableState();
+//            obj = new parseXML(urlSource);
 //            obj.fetchXML();
         }
     });
@@ -65,7 +75,8 @@ public class MainActivity extends AppCompatActivity implements OnClickListener
             @Override
             public void onClick(View v) {
                 urlSource = planned;
-                obj = new parseXML(urlSource);
+                // obj = new parseXML(urlSource);
+                startProgress(urlSource);
 //                obj.fetchXML();
             }
         });
@@ -73,7 +84,8 @@ public class MainActivity extends AppCompatActivity implements OnClickListener
             @Override
             public void onClick(View v) {
                 urlSource = current;
-                obj = new parseXML(urlSource);
+                startProgress(urlSource);
+//                obj = new parseXML(urlSource);
 //                obj.fetchXML();
             }
         });
@@ -81,42 +93,12 @@ public class MainActivity extends AppCompatActivity implements OnClickListener
 //        Log.e("MyTag","after startButton");
         // More Code goes here
 
-
-//        List<plannedRoadwork> plannedRoadworks = null;
-//        try {
-//            pullParser parser = new pullParser();
-//            URL source = new URL(urlSource);
-//            URLConnection cnct = source.openConnection();
-//            HttpURLConnection cnHttp = (HttpURLConnection) cnct;
-//            if(cnHttp.getResponseCode())
-//            BufferedReader bf = new BufferedReader((new InputStreamReader(cnct.getInputStream())));
-//            StringBuilder sb = new StringBuilder();
-//            String inline = "";
-//            while ((inline = bf.readLine()) != null) {
-//                sb.append(inline);
-//            }
-//            byte[] bytes = sb.toString().getBytes();
-//            /*
-//             * Get ByteArrayInputStream from byte array.
-//             */
-//            InputStream inputStream = new ByteArrayInputStream(bytes);
-//            plannedRoadworks = parser.parse(inputStream);
-//
-//            ArrayAdapter<plannedRoadwork> adapter =new ArrayAdapter<plannedRoadwork>
-//
-//                    (this,android.R.layout.simple_list_item_1, plannedRoadworks);
-//            listView.setAdapter(adapter);
-//
-//        } catch (IOException e) {e.printStackTrace();}
-
-
-
-
     }
 
-    public void startProgress()
+    public void startProgress(String urlSource)
     {
         // Run network access on a separate thread;
+        this.urlSource = urlSource;
         new Thread(new Task(urlSource)).start();
 
 
@@ -126,7 +108,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener
     public void onClick(View v)
     {
         Log.e("MyTag","in onClick");
-        startProgress();
+        startProgress(urlSource);
 
 
         Log.e("MyTag","after startProgress");
@@ -148,36 +130,65 @@ public class MainActivity extends AppCompatActivity implements OnClickListener
 
             URL aurl;
             URLConnection yc;
-            BufferedReader in = null;
-            String inputLine = "";
+//            BufferedReader in = null;
+//            String inputLine = "";
 
 
             Log.e("MyTag","in run");
-
+            if(items != null) {
+                items.clear();
+            }
             try
             {
                 Log.e("MyTag","in try");
                 aurl = new URL(url);
                 yc = aurl.openConnection();
-                in = new BufferedReader(new InputStreamReader(yc.getInputStream()));
+                HttpURLConnection conn = (HttpURLConnection) aurl.openConnection();
+                conn.setReadTimeout(10000 /* milliseconds */);
+                conn.setConnectTimeout(15000 /* milliseconds */);
+                conn.setRequestMethod("GET");
+                conn.setDoInput(true);
+                // Starts the query
+                conn.connect();
+                InputStream stream = conn.getInputStream();
+//                in = new BufferedReader(new InputStreamReader(yc.getInputStream()));
                 Log.e("MyTag","after ready");
                 //
-                // Now read the data. Make sure that there are no specific hedrs
+                // Now read the data. Make sure that there are no specific headers
                 // in the data file that you need to ignore.
                 // The useful data that you need is in each of the item entries
                 //
-                while ((inputLine = in.readLine()) != null)
-                {
+                pullParser parser = new pullParser();
+//                StringBuilder sb = new StringBuilder();
+//                String inline = "";
+//                while ((inline = in.readLine()) != null) {
+//                    sb.append(inline);
+//                    Log.e("data", inline );
+//                }
+//                byte[] bytes = sb.toString().getBytes();
+//                /*
+//                 * Get ByteArrayInputStream from byte array.
+//                 */
+//                InputStream inputStream = new ByteArrayInputStream(bytes);
 
-                    result = result + inputLine;
-                    Log.e("MyTag",inputLine);
+                items = (ArrayList<pullParser.Item>) parser.parse(stream);
+                Log.e("parsing complete", items.toString());
+                ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.list_item, items);
+                listView.setAdapter(adapter);
 
-                }
-                in.close();
+//                lv.setAdapter(adapter);
+//                while ((inputLine = in.readLine()) != null)
+//                {
+//
+//                    result = result + inputLine;
+//                    Log.e("MyTag",inputLine);
+//
+//                }
+//                in.close();
             }
-            catch (IOException ae)
+            catch (IOException | XmlPullParserException ae)
             {
-                Log.e("MyTag", "ioexception in run");
+                Log.e("MyTag", "ioexception in run " + ae);
             }
 
             //
@@ -191,8 +202,12 @@ public class MainActivity extends AppCompatActivity implements OnClickListener
             MainActivity.this.runOnUiThread(new Runnable()
             {
                 public void run() {
+
+//                    ArrayList listItems = new ArrayList(items);
+
+
                     Log.d("UI thread", "I am the UI thread");
-                    rawDataDisplay.setText(result);
+//                    rawDataDisplay.setText(result);
                 }
             });
         }

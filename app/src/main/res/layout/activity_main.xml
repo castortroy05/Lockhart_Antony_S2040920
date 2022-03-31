@@ -8,7 +8,8 @@
 
     <!-- MPD XML Starter code Semester B Session 2020 2021 -->
     <ScrollView
-        android:layout_width="fill_parent" android:layout_height="fill_parent">
+        android:layout_width="fill_parent" android:layout_height="fill_parent"
+        tools:ignore="MissingConstraints">
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="fill_parent"
@@ -45,9 +46,7 @@
             <ListView
                 android:id="@+id/listView1"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-            </ListView>
+                android:layout_height="match_parent" />
 
             <!--            <TextView-->
 <!--                android:id="@+id/acknowledgement"-->
