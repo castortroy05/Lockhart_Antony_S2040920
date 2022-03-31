@@ -184,7 +184,7 @@ public class PullParser {
     }
 
     // Parses the contents of an entry. If it encounters a title, summary, or link tag, hands them off
-// to their respective "read" methods for processing. Otherwise, skips the tag.
+    // to their respective "read" methods for processing. Otherwise, skips the tag.
     private static Item readItem(XmlPullParser parser) throws XmlPullParserException, IOException {
         parser.require(XmlPullParser.START_TAG, ns, "item");
         String title = null;
@@ -201,23 +201,23 @@ public class PullParser {
             switch (name) {
                 case "title":
                     title = readTitle(parser);
-                    Log.e(parser.getName(), title);
+//                    Log.e(parser.getName(), title);
                     break;
                 case "description":
                     description = readDescription(parser);
-                    Log.e(parser.getName(), description);
+//                    Log.e(parser.getName(), description);
                     break;
                 case "link":
                     link = readLink(parser);
-                    Log.e(parser.getName(), link);
+//                    Log.e(parser.getName(), link);
                     break;
                 case "georss:point":
                     location = readLocation(parser);
-                    Log.e(parser.getName(), location);
+//                    Log.e(parser.getName(), location);
                     break;
                 case "pubDate":
                     date = readDate(parser);
-                    Log.e(parser.getName(), date);
+//                    Log.e(parser.getName(), date);
                     break;
                 default:
                     skip(parser);

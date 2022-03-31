@@ -1,11 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--   Single List Item Design  -->
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/list_item"
-    android:layout_width="wrap_content"
-    android:layout_height="fill_parent"
-    android:layout_gravity="center"
-    android:padding="10dip"
-    android:textSize="16sp"
-    android:textStyle="bold">
-</TextView>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:textAlignment="gravity"
+        android:textAppearance="?android:attr/textAppearanceListItem"
+        android:shadowColor="@color/black"
+        android:shadowRadius="2.5"
+        android:shadowDx="1.2"
+        android:shadowDy="1.2"
+        android:textColor="@android:color/black" />
+
+
+    <TextView
+        android:id="@+id/description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="gravity"
+        android:layout_below="@+id/title"
+        android:layout_marginTop="5dp"
+        android:textAppearance="?android:attr/textAppearanceListItemSecondary"
+        android:shadowColor="@color/black"
+        android:shadowRadius="1.5"
+        android:shadowDx="1.2"
+        android:shadowDy="1.2"
+        android:textColor="@android:color/black" />
+
+
+    <!--    <ImageView-->
+<!--        android:id="@+id/location"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_alignParentEnd="true"-->
+<!--        android:layout_alignParentRight="true"-->
+<!--        android:layout_centerVertical="true"-->
+<!--        android:src="@android:drawable/ic_dialog_info" />-->
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+       android:layout_centerInParent="true">
+
+
+<!--        <Button-->
+<!--            android:id="@+id/mapButton"-->
+<!--            style="@style/Widget.AppCompat.Button.Colored"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_alignParentEnd="true"-->
+<!--            android:layout_alignParentRight="true"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:background="@color/purple_700"-->
+<!--            android:padding="10dp"-->
+<!--            android:radius="20dp"-->
+<!--            android:shadowColor="@color/black"-->
+<!--            android:shadowDx="1.2"-->
+<!--            android:shadowDy="1.2"-->
+<!--            android:shadowRadius="2.5"-->
+<!--            android:text="Map" />-->
+    </LinearLayout>
+
+</RelativeLayout>

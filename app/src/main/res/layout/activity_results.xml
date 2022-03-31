@@ -4,9 +4,38 @@
     android:layout_height="match_parent"
     tools:context=".NetworkActions" >
 
-    <WebView
-        android:id="@+id/webview"
+
+<!--    <WebView-->
+<!--        android:id="@+id/webview"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="173dp">-->
+
+<!--    </WebView>-->
+
+    <TextView
+        android:id="@+id/salutation"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent" />
+        android:layout_height="wrap_content"
+        android:background="@color/purple_500"
+        android:shadowColor="@color/black"
+        android:shadowDx="1.2"
+        android:shadowDy="1.2"
+        android:shadowRadius="2.5"
+        android:text="Welcome to Mobile Platform Development Assignment
+2021-2022"
+        android:textAlignment="center"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@color/white"
+         />
+
+    <ListView
+        android:id="@+id/listView1"
+        style="@style/Widget.AppCompat.Light.ActionBar.Solid"
+        android:layout_width="match_parent"
+
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/salutation"
+        android:layout_marginTop="0dp"
+        android:background="@color/purple_200" />
 
 </RelativeLayout>

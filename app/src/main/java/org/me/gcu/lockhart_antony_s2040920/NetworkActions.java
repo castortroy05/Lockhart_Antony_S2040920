@@ -1,30 +1,38 @@
 package org.me.gcu.lockhart_antony_s2040920;
 
+import static android.R.layout.simple_list_item_1;
+
 import android.app.Activity;
+import android.content.ClipData;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.webkit.WebView;
-//import android.widget.ArrayAdapter;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 import org.xmlpull.v1.XmlPullParserException;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-//import java.net.URLConnection;
-//import java.util.ArrayList;
+
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+
 import org.me.gcu.lockhart_antony_s2040920.PullParser.Item;
 
 public class NetworkActions extends Activity {
     public static String result = null;
+    public ArrayList<Item> loadedItems = new ArrayList<>();
+    private ListView lv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_results);
+
 
         Intent intent = getIntent();
         String urlSource = intent.getStringExtra(MainActivity.EXTRA_FEED);
@@ -32,8 +40,6 @@ public class NetworkActions extends Activity {
         new Thread(new Task(urlSource)).start();
 
     }
-
-
     private class Task implements Runnable
     {
         private final String url;
@@ -46,8 +52,6 @@ public class NetworkActions extends Activity {
         @Override
         public void run()
         {
-//            URL aurl;
-//            URLConnection yc;
             try {
                 result = loadXmlFromNetwork(url);
             } catch (IOException | XmlPullParserException e) {
@@ -56,65 +60,25 @@ public class NetworkActions extends Activity {
             }
 
             Log.e("MyTag","in run");
-//            if(items != null) {
-//                items.clear();
-//            }
-//            try
-//            {
-//                Log.e("MyTag","in try");
-//                aurl = new URL(url);
-//                yc = aurl.openConnection();
-//                HttpURLConnection conn = (HttpURLConnection) aurl.openConnection();
-//                conn.setReadTimeout(10000 /* milliseconds */);
-//                conn.setConnectTimeout(15000 /* milliseconds */);
-//                conn.setRequestMethod("GET");
-//                conn.setDoInput(true);
-//                // Starts the query
-//                conn.connect();
-//                InputStream stream = conn.getInputStream();
-////                in = new BufferedReader(new InputStreamReader(yc.getInputStream()));
-//                Log.e("MyTag","after ready");
-//                //
-//                // Now read the data. Make sure that there are no specific headers
-//                // in the data file that you need to ignore.
-//                // The useful data that you need is in each of the item entries
-//                //
-//                PullParser parser = new PullParser();
-//                items = (ArrayList<PullParser.Item>) parser.parse(stream);
-//                Log.e("parsing complete", items.toString());
-//                ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.list_item, items);
-//                listView.setAdapter(adapter);
-
-//                lv.setAdapter(adapter);
-//                while ((inputLine = in.readLine()) != null)
-//                {
 //
-//                    result = result + inputLine;
-//                    Log.e("MyTag",inputLine);
-//
-//                }
-//                in.close();
-//            }
-//            catch (IOException | XmlPullParserException ae)
-//            {
-//                Log.e("MyTag", "ioexception in run " + ae);
-//            }
-
-            //
-            // Now that you have the xml data you can parse it
-            //
-
-            // Now update the TextView to display raw XML data
-            // Probably not the best way to update TextView
-            // but we are just getting started !
 
             NetworkActions.this.runOnUiThread(() -> {
                 setContentView(R.layout.activity_results);
+                Log.d("loadedItems", String.valueOf(loadedItems));
                 // Displays the HTML string in the UI via a WebView
-                WebView myWebView = (WebView) findViewById(R.id.webview);
-                myWebView.loadData(result, "text/html", null);
+//                WebView myWebView = findViewById(R.id.webview);
+//                myWebView.loadData(result, "text/html", null);
+                //Declaration part
+                ArrayAdapter<Item> adapter;
+                //                assert listItems != null;
+//                ArrayList listItems = new ArrayList<String>(loadedItems.to);
+                lv  = findViewById(R.id.listView1);
 
-//                    ArrayList listItems = new ArrayList(items);
+                //arraylist Append
+                adapter= new ItemAdapter(NetworkActions.this, R.layout.list_item, loadedItems
+                        );
+                lv.setAdapter(adapter);
+
 
 
                 Log.d("UI thread", "I am the UI thread");
@@ -138,6 +102,7 @@ public class NetworkActions extends Activity {
         try {
             stream = downloadUrl(urlString);
             items = XmlParser.parse(stream);
+            loadedItems.addAll(items);
             // Makes sure that the InputStream is closed after the app is
             // finished using it.
         } finally {
@@ -146,30 +111,27 @@ public class NetworkActions extends Activity {
             }
         }
 
+
         // Store retrieve each item and format it as an html string
         for (Item item : items) {
             htmlString.append("<h2>").append(item.title).append("</h2>");
             htmlString.append(item.description);
+            String location= item.location;
+            String[] latlong = location.split(" ");
             htmlString.append("<p><a href='");
-            htmlString.append(item.link);
+            htmlString.append("https://www.google.com/maps?z=12&t=k&q=").append("description+(").append(item.description).append(")").append("loc:").append(latlong[0]).append("+").append(latlong[1]).append("&").append(item.title);
             htmlString.append("'>").append(item.title).append("</a></p>");
             htmlString.append(item.date);
-            htmlString.append(item.location);
+//            htmlString.append("<p><a href='");
+//            htmlString.append("https://www.google.com/maps?q=");
+//            htmlString.append(item.location);
+//            htmlString.append("'>");
+//            htmlString.append("map link");
+//            htmlString.append("</a></p>");
             // }
         }
         return htmlString.toString();
     }
-
-
-
-
-
-
-
-
-
-
-
     // Given a string representation of a URL, sets up a connection and gets
     // an input stream.
     private InputStream downloadUrl(String urlString) throws IOException {

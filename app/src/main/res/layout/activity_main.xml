@@ -8,58 +8,101 @@
 
     <!-- MPD XML Starter code Semester B Session 2020 2021 -->
     <ScrollView
-        android:layout_width="fill_parent" android:layout_height="fill_parent"
-        tools:ignore="MissingConstraints">
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="-209dp">
+
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent">
+            android:layout_height="fill_parent"
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/salutation"
                 android:layout_width="fill_parent"
-                android:layout_height="128dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:shadowColor="@color/black"
+                android:shadowRadius="2.5"
+                android:shadowDx="1.2"
+                android:shadowDy="1.2"
+                android:textAlignment="center"
                 android:text="Welcome to Mobile Platform Development Assignment
 2021-2022"
                 android:textSize="20sp" />
-<!--            <Button-->
-<!--                android:id="@+id/startButton"-->
-<!--                android:layout_width="fill_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:text="Press to get data"/>-->
+            <!--            <Button-->
+            <!--                android:id="@+id/startButton"-->
+            <!--                android:layout_width="fill_parent"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:text="Press to get data"/>-->
             <Button
                 android:id="@+id/incidentButton"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:text="Press to get current incidents"/>
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:padding="10dp"
+                android:shadowColor="@color/black"
+                android:shadowRadius="2.5"
+                android:shadowDx="1.2"
+                android:shadowDy="1.2"
+                android:background="@color/purple_700"
+                android:radius="20dp"
+                android:layout_margin="10dp"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:text="Press to get current incidents" />
+
+
+
             <Button
                 android:id="@+id/plannedButton"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:text="Press to get planned roadworks"/>
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:padding="10dp"
+                android:shadowColor="@color/black"
+                android:shadowRadius="2.5"
+                android:shadowDx="1.2"
+                android:shadowDy="1.2"
+                android:background="@color/purple_700"
+                android:radius="20dp"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:text="Press to get planned roadworks" />
+
             <Button
                 android:id="@+id/currentButton"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:text="Press to get current roadworks"/>
-
-            <ListView
-                android:id="@+id/listView1"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:padding="10dp"
+                android:shadowColor="@color/black"
+                android:shadowRadius="2.5"
+                android:shadowDx="1.2"
+                android:shadowDy="1.2"
+                android:background="@color/purple_700"
+                android:radius="20dp"
+                android:layout_margin="10dp"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:text="Press to get current roadworks" />
+
+            <!--            <ListView-->
+            <!--                android:id="@+id/listView1"-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="match_parent" />-->
 
             <!--            <TextView-->
-<!--                android:id="@+id/acknowledgement"-->
-<!--                android:layout_width="fill_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:textSize="20sp"-->
-<!--                android:text="Contains Traffic Scotland Data"/>-->
-<!--            <TextView-->
-<!--                android:id="@+id/rawDataDisplay"-->
-<!--                android:layout_width="fill_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:textSize="20sp"-->
-<!--                android:text="Raw Data is Displayed here"/>-->
+            <!--                android:id="@+id/acknowledgement"-->
+            <!--                android:layout_width="fill_parent"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:textSize="20sp"-->
+            <!--                android:text="Contains Traffic Scotland Data"/>-->
+            <!--            <TextView-->
+            <!--                android:id="@+id/rawDataDisplay"-->
+            <!--                android:layout_width="fill_parent"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:textSize="20sp"-->
+            <!--                android:text="Raw Data is Displayed here"/>-->
         </LinearLayout>
     </ScrollView>
 
