@@ -32,10 +32,11 @@
         android:id="@+id/listView1"
         style="@style/Widget.AppCompat.Light.ActionBar.Solid"
         android:layout_width="match_parent"
+        android:backgroundTint="@color/black"
 
         android:layout_height="wrap_content"
         android:layout_below="@+id/salutation"
         android:layout_marginTop="0dp"
-        android:background="@color/purple_200" />
+        android:background="@color/black" />
 
 </RelativeLayout>
