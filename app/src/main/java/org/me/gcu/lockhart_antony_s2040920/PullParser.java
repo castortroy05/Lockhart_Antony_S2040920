@@ -14,7 +14,7 @@ import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 
 
-public class pullParser {
+public class PullParser {
 //    private List<FeedItem> feedItems =new ArrayList<FeedItem>();
 //    private FeedItem feedItem;
     private String text;
@@ -22,13 +22,13 @@ public class pullParser {
 
 
 
-    public pullParser() throws XmlPullParserException {
+    public PullParser() throws XmlPullParserException {
     }
 
 //    public List<FeedItem> getFeedItems(){
 //        return feedItems;
 //    }
-    public List<Item> parse(InputStream is) throws XmlPullParserException, IOException{
+    public static List<Item> parse(InputStream is) throws XmlPullParserException, IOException{
 
         try {
 //            XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
@@ -116,7 +116,7 @@ public class pullParser {
 
 
 
-    private ArrayList<Item> readFeed(XmlPullParser parser) throws XmlPullParserException, IOException {
+    private static ArrayList<Item> readFeed(XmlPullParser parser) throws XmlPullParserException, IOException {
         ArrayList<Item> items = new ArrayList<Item>();
         parser.require(XmlPullParser.START_TAG, ns, "rss");
         parser.nextTag();
@@ -147,7 +147,7 @@ public class pullParser {
         return items;
     }
 
-    private void skip(XmlPullParser parser) throws XmlPullParserException, IOException {
+    private static void skip(XmlPullParser parser) throws XmlPullParserException, IOException {
         if (parser.getEventType() != XmlPullParser.START_TAG) {
             throw new IllegalStateException();
         }
@@ -185,7 +185,7 @@ public class pullParser {
 
     // Parses the contents of an entry. If it encounters a title, summary, or link tag, hands them off
 // to their respective "read" methods for processing. Otherwise, skips the tag.
-    private Item readItem(XmlPullParser parser) throws XmlPullParserException, IOException {
+    private static Item readItem(XmlPullParser parser) throws XmlPullParserException, IOException {
         parser.require(XmlPullParser.START_TAG, ns, "item");
         String title = null;
         String description = null;
@@ -198,31 +198,37 @@ public class pullParser {
                 continue;
             }
             String name = parser.getName();
-            if (name.equals("title")) {
-                title = readTitle(parser);
-                Log.e(parser.getName(),title);
-            } else if (name.equals("description")) {
-                description = readDescription(parser);
-                Log.e(parser.getName(),description);
-            } else if (name.equals("link")) {
-                link = readLink(parser);
-                Log.e(parser.getName(),link);
-            }else if (name.equals("georss:point")) {
-                location = readLocation(parser);
-                Log.e(parser.getName(),location);
-            }else if (name.equals("pubDate")) {
-                date = readDate(parser);
-                Log.e(parser.getName(),date);
-            }
-            else {
-                skip(parser);
+            switch (name) {
+                case "title":
+                    title = readTitle(parser);
+                    Log.e(parser.getName(), title);
+                    break;
+                case "description":
+                    description = readDescription(parser);
+                    Log.e(parser.getName(), description);
+                    break;
+                case "link":
+                    link = readLink(parser);
+                    Log.e(parser.getName(), link);
+                    break;
+                case "georss:point":
+                    location = readLocation(parser);
+                    Log.e(parser.getName(), location);
+                    break;
+                case "pubDate":
+                    date = readDate(parser);
+                    Log.e(parser.getName(), date);
+                    break;
+                default:
+                    skip(parser);
+                    break;
             }
         }
         return new Item(title, description, link, location, date);
     }
 
     // Processes title tags in the feed.
-    private String readTitle(XmlPullParser parser) throws IOException, XmlPullParserException {
+    private static String readTitle(XmlPullParser parser) throws IOException, XmlPullParserException {
         parser.require(XmlPullParser.START_TAG, ns, "title");
         String title = readText(parser);
         parser.require(XmlPullParser.END_TAG, ns, "title");
@@ -230,7 +236,7 @@ public class pullParser {
     }
 
     // Processes link tags in the feed.
-    private String readLink(XmlPullParser parser) throws IOException, XmlPullParserException {
+    private static String readLink(XmlPullParser parser) throws IOException, XmlPullParserException {
         parser.require(XmlPullParser.START_TAG, ns, "link");
         String link = readText(parser);
         parser.require(XmlPullParser.END_TAG, ns, "link");
@@ -239,21 +245,21 @@ public class pullParser {
     }
 
     // Processes description tags in the feed.
-    private String readDescription(XmlPullParser parser) throws IOException, XmlPullParserException {
+    private static String readDescription(XmlPullParser parser) throws IOException, XmlPullParserException {
         parser.require(XmlPullParser.START_TAG, ns, "description");
         String description = readText(parser);
         parser.require(XmlPullParser.END_TAG, ns, "description");
         return description;
     }
 
-    private String readLocation(XmlPullParser parser) throws IOException, XmlPullParserException {
+    private static String readLocation(XmlPullParser parser) throws IOException, XmlPullParserException {
         parser.require(XmlPullParser.START_TAG, ns, "georss:point");
         String location = readText(parser);
         parser.require(XmlPullParser.END_TAG, ns, "georss:point");
         return location;
     }
 
-    private String readDate(XmlPullParser parser) throws IOException, XmlPullParserException {
+    private static String readDate(XmlPullParser parser) throws IOException, XmlPullParserException {
         parser.require(XmlPullParser.START_TAG, ns, "pubDate");
         String date = readText(parser);
         parser.require(XmlPullParser.END_TAG, ns, "pubDate");
@@ -261,7 +267,7 @@ public class pullParser {
     }
 
     // For the tags title and summary, extracts their text values.
-    private String readText(XmlPullParser parser) throws IOException, XmlPullParserException {
+    private static String readText(XmlPullParser parser) throws IOException, XmlPullParserException {
         String result = "";
         if (parser.next() == XmlPullParser.TEXT) {
             result = parser.getText();
