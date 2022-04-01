@@ -26,6 +26,8 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:shadowColor="@color/black"
+                android:textColor="@color/white"
+                android:background="@color/purple_500"
                 android:shadowDx="1.2"
                 android:shadowDy="1.2"
                 android:shadowRadius="2.5"
