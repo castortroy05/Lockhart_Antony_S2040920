@@ -35,8 +35,11 @@
         android:layout_below="@id/salutation"
 
         android:layout_centerHorizontal="true"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
         android:background="@color/purple_700"
-        android:layout_margin="10dp"
         android:gravity="center"
         android:padding="10dp"
         android:shadowColor="@color/black"
@@ -44,7 +47,8 @@
         android:shadowDy="1.2"
         android:shadowRadius="2.5"
         android:text="Press to show map"
-        android:textAlignment="center" />
+        android:textAlignment="center"
+        android:visibility="invisible" />
 
     <ListView
         android:id="@+id/listView1"
