@@ -1,14 +1,16 @@
 package org.me.gcu.lockhart_antony_s2040920;
 
-import static android.R.layout.simple_list_item_1;
+//import static android.R.layout.simple_list_item_1;
 
 import android.app.Activity;
-import android.content.ClipData;
+//import android.content.ClipData;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
-import android.webkit.WebView;
+//import android.webkit.WebView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 
 import org.xmlpull.v1.XmlPullParserException;
@@ -16,30 +18,41 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+//import android.view.View;
+//import android.view.View.OnClickListener;
 
 import java.util.ArrayList;
-import java.util.Collections;
+//import java.util.Collections;
 import java.util.List;
 
-import org.me.gcu.lockhart_antony_s2040920.PullParser.Item;
+import org.me.gcu.lockhart_antony_s2040920.Item;
 
 public class NetworkActions extends Activity {
     public static String result = null;
     public ArrayList<Item> loadedItems = new ArrayList<>();
     private ListView lv;
+//    Button mapButton = findViewById(R.);
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_results);
 
-
+//        mapButton.setOnClickListener(this::loadMap);
         Intent intent = getIntent();
         String urlSource = intent.getStringExtra(MainActivity.EXTRA_FEED);
 
         new Thread(new Task(urlSource)).start();
 
+
+
     }
+
+
+
     private class Task implements Runnable
     {
         private final String url;
@@ -62,32 +75,40 @@ public class NetworkActions extends Activity {
             Log.e("MyTag","in run");
 //
 
-            NetworkActions.this.runOnUiThread(() -> {
-                setContentView(R.layout.activity_results);
-                Log.d("loadedItems", String.valueOf(loadedItems));
-                // Displays the HTML string in the UI via a WebView
-//                WebView myWebView = findViewById(R.id.webview);
-//                myWebView.loadData(result, "text/html", null);
-                //Declaration part
-                ArrayAdapter<Item> adapter;
-                //                assert listItems != null;
-//                ArrayList listItems = new ArrayList<String>(loadedItems.to);
-                lv  = findViewById(R.id.listView1);
-
-                //arraylist Append
-                adapter= new ItemAdapter(NetworkActions.this, R.layout.list_item, loadedItems
-                        );
-                lv.setAdapter(adapter);
-
-
-
-                Log.d("UI thread", "I am the UI thread");
-//                    rawDataDisplay.setText(result);
-            });
+            NetworkActions.this.runOnUiThread(this::run2);
         }
 
-    }
+        private void run2() {
+            setContentView(R.layout.activity_results);
+//                Log.d("loadedItems", String.valueOf(loadedItems));
+            // Displays the HTML string in the UI via a WebView
+//                WebView myWebView = findViewById(R.id.webview);
+//                myWebView.loadData(result, "text/html", null);
+            //Declaration part
+            ArrayAdapter<Item> adapter;
+            //                assert listItems != null;
+//                ArrayList listItems = new ArrayList<String>(loadedItems.to);
+            lv = findViewById(R.id.listView1);
 
+            //arraylist Append
+            adapter = new ItemAdapter(NetworkActions.this, R.layout.list_item, loadedItems
+            );
+            lv.setAdapter(adapter);
+
+
+            Log.d("UI thread", "I am the UI thread");
+//                    rawDataDisplay.setText(result);
+        }
+    }
+//    public void loadMap(View v) {
+//        Intent intent = new Intent(this, MapsActivity.class);
+//        for (Item loadedItem : loadedItems) {
+//
+//
+//        }
+//
+//        startActivity(intent);
+//    }
 
     private String loadXmlFromNetwork(String urlString)
             throws XmlPullParserException, IOException {
@@ -101,7 +122,7 @@ public class NetworkActions extends Activity {
 
         try {
             stream = downloadUrl(urlString);
-            items = XmlParser.parse(stream);
+            items = PullParser.parse(stream);
             loadedItems.addAll(items);
             // Makes sure that the InputStream is closed after the app is
             // finished using it.

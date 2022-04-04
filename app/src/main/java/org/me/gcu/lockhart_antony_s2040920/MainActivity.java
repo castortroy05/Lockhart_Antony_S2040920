@@ -2,12 +2,13 @@ package org.me.gcu.lockhart_antony_s2040920;
 
 
 import android.content.Intent;
-import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity implements OnClickListener
 {
@@ -24,14 +25,18 @@ public class MainActivity extends AppCompatActivity implements OnClickListener
         Button plannedButton = findViewById(R.id.plannedButton);
         Button currentButton = findViewById(R.id.currentButton);
 
+
         incidentButton.setOnClickListener(this::readIncidents);
         plannedButton.setOnClickListener(this::readPlanned);
         currentButton.setOnClickListener(this::readCurrent);
 
+    }
 //        Log.e("MyTag","after startButton");
         // More Code goes here
 
-    }
+
+
+
 
     public void readPlanned (View v) {
         String urlSource = "https://trafficscotland.org/rss/feeds/plannedroadworks.aspx";

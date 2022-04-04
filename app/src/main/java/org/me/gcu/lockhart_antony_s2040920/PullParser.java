@@ -12,6 +12,7 @@ import java.util.UUID;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
+import org.me.gcu.lockhart_antony_s2040920.Item;
 
 
 public class PullParser {
@@ -165,23 +166,23 @@ public class PullParser {
     }
 
 
-    public static class Item {
-        public final String title;
-        public final String link;
-        public final String description;
-        public final String location;
-        public final String date;
-//        public final int uuid;
-
-        private Item(String title, String description, String link, String location, String date) {
-            this.title = title;
-            this.description = description;
-            this.link = link;
-            this.location = location;
-            this.date = date;
-//            this.uuid = Integer.parseInt(UUID.randomUUID().toString());
-        }
-    }
+//    public static class Item {
+//        public final String title;
+//        public final String link;
+//        public final String description;
+//        public final String location;
+//        public final String date;
+////        public final int uuid;
+//
+//        private Item(String title, String description, String link, String location, String date) {
+//            this.title = title;
+//            this.description = description;
+//            this.link = link;
+//            this.location = location;
+//            this.date = date;
+////            this.uuid = Integer.parseInt(UUID.randomUUID().toString());
+//        }
+//    }
 
     // Parses the contents of an entry. If it encounters a title, summary, or link tag, hands them off
     // to their respective "read" methods for processing. Otherwise, skips the tag.

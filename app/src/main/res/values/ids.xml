@@ -2,4 +2,7 @@
 <resources>
     <item name="itemTitle" type="id" />
     <item name="itemDescription" type="id" />
+    <item name="itemLink" type="id" />
+    <item name="itemLocation" type="id" />
+
 </resources>
