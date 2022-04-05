@@ -90,7 +90,7 @@ public class NetworkActions extends Activity {
 
     private ArrayList<Item> loadAllXmlFromNetwork()
             throws XmlPullParserException, IOException {
-        String[] urls = new ArrayList<>(Arrays.asList("https://trafficscotland.org/rss/feeds/plannedroadworks.aspx", "https://trafficscotland.org/rss/feeds/currentincidents.aspx", "https://trafficscotland.org/rss/feeds/roadworks.aspx")).toArray(new String[0]);
+        String[] urls = new ArrayList<>(Arrays.asList( "https://trafficscotland.org/rss/feeds/currentincidents.aspx", "https://trafficscotland.org/rss/feeds/roadworks.aspx","https://trafficscotland.org/rss/feeds/plannedroadworks.aspx")).toArray(new String[0]);
         List<Item> items;
         for (String url: urls
              ) {try (InputStream stream = downloadUrl(url)) {

@@ -54,12 +54,20 @@ public class ItemAdapter extends ArrayAdapter<Item> {
         TextView endDateLabel = convertView.findViewById(R.id.endDateLabel);
         TextView descriptionLabel = convertView.findViewById(R.id.descriptionLabel);
 
-
+        txtDelayInfo.setVisibility(View.VISIBLE);
+        delayInfoLabel.setVisibility(View.VISIBLE);
+        txtStartDate.setVisibility(View.VISIBLE);
+        startDateLabel.setVisibility(View.VISIBLE);
+        txtEndDate.setVisibility(View.VISIBLE);
+        endDateLabel.setVisibility(View.VISIBLE);
+        itemDescription.setVisibility(View.VISIBLE);
+        descriptionLabel.setVisibility(View.VISIBLE);
 
 
 
         if(item.description.contains("<br />")){
             String[] info = item.description.split("<br />");
+
 
 
             String endDateStr = "";
