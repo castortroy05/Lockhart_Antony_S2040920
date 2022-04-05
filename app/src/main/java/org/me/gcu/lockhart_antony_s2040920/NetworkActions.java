@@ -140,7 +140,7 @@ public class NetworkActions extends Activity {
             String location= item.location;
             String[] latlong = location.split(" ");
             htmlString.append("<p><a href='");
-            htmlString.append("https://www.google.com/maps?z=12&t=k&q=").append("description+(").append(item.description).append(")").append("loc:").append(latlong[0]).append("+").append(latlong[1]).append("&").append(item.title);
+            htmlString.append("https://www.google.com/maps?z=12&t=k&q=").append("loc:").append(latlong[0]).append("+").append(latlong[1]).append("&").append(item.title);
             htmlString.append("'>").append(item.title).append("</a></p>");
             htmlString.append(item.date);
 //            htmlString.append("<p><a href='");

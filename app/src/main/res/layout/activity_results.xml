@@ -2,7 +2,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black"
     tools:context=".NetworkActions" >
 
 
@@ -17,7 +16,6 @@
         android:id="@+id/salutation"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="@color/purple_700"
         android:shadowColor="@color/black"
         android:shadowDx="1.2"
         android:shadowDy="1.2"
@@ -25,43 +23,19 @@
         android:text="Antony Lockhart - S2040920 - MPD Coursework"
         android:textAlignment="center"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="@color/white" />
+        />
 
-    <Button
-        android:id="@+id/mapButton"
-        style="@android:style/Widget.Holo.Button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/salutation"
 
-        android:layout_centerHorizontal="true"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="10dp"
-        android:background="@color/purple_700"
-        android:gravity="center"
-        android:padding="10dp"
-        android:shadowColor="@color/black"
-        android:shadowDx="1.2"
-        android:shadowDy="1.2"
-        android:shadowRadius="2.5"
-        android:text="Press to show map"
-        android:textAlignment="center"
-        android:visibility="invisible" />
 
     <ListView
         android:id="@+id/listView1"
         style="@android:style/Widget.ListView.Menu"
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
-
+        android:layout_below="@+id/salutation"
         android:layout_alignWithParentIfMissing="false"
-        android:layout_below="@+id/mapButton"
         android:layout_marginTop="0dp"
         android:animateLayoutChanges="true"
-        android:background="@color/black"
-        android:backgroundTint="@color/black"
         android:clickable="true"
         android:isScrollContainer="true" />
 

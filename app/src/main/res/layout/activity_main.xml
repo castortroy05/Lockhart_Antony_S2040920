@@ -7,87 +7,163 @@
     tools:context=".MainActivity">
 
     <!-- MPD XML Starter code Semester B Session 2020 2021 -->
-    <ScrollView
+    <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:background="@color/black"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteY="-209dp">
+        tools:ignore="MissingConstraints">
 
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:background="@color/black"
-            android:orientation="vertical">
+
+            android:orientation="vertical"
+            android:weightSum="1">
 
             <TextView
                 android:id="@+id/salutation"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
                 android:shadowColor="@color/black"
-                android:textColor="@color/white"
-                android:background="@color/purple_500"
+
                 android:shadowDx="1.2"
                 android:shadowDy="1.2"
                 android:shadowRadius="2.5"
+                android:padding="20dp"
                 android:text="Welcome to Mobile Platform Development Assignment
 2021-2022"
                 android:textAlignment="center"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:textSize="20sp" />
-            <!--            <Button-->
-            <!--                android:id="@+id/startButton"-->
-            <!--                android:layout_width="fill_parent"-->
-            <!--                android:layout_height="wrap_content"-->
-            <!--                android:text="Press to get data"/>-->
+                android:layout_weight="1"
+                />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="2"
+            android:layout_margin="5dp">
             <Button
                 android:id="@+id/incidentButton"
-                style="@style/Widget.AppCompat.Button.Colored"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_margin="10dp"
-                android:background="@color/purple_700"
-                android:padding="10dp"
+                android:layout_margin="0dp"
+                android:background="@color/SteelBlue"
+                android:padding="15dp"
+                android:drawableStart="@android:drawable/ic_menu_today"
                 android:shadowColor="@color/black"
                 android:shadowDx="1.2"
                 android:shadowDy="1.2"
                 android:shadowRadius="2.5"
-                android:text="Press to get current incidents" />
+                android:text="Current incidents"
+                android:layout_weight="1"/>
 
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Current incidents on the road network e.g. accidents"
+                android:textAlignment="center"
+                android:layout_marginTop="0dp"
+                android:padding="10dp"
+                android:autoLink="all"
+                android:textAppearance="?android:attr/textAppearanceListItemSecondary"
+                android:shadowColor="@color/black"
+                android:shadowRadius="1.5"
+                android:shadowDx="1.2"
+                android:shadowDy="1.2"
+                android:layout_weight="1"
+                >
+
+
+            </TextView>
+        </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="2"
+                android:layout_margin="5dp">
 
             <Button
                 android:id="@+id/plannedButton"
-                style="@style/Widget.AppCompat.Button.Colored"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_margin="10dp"
-                android:background="@color/purple_700"
-                android:padding="10dp"
-                android:radius="20dp"
+                android:layout_margin="0dp"
+                android:background="@color/RoyalBlue"
+                android:padding="15dp"
                 android:shadowColor="@color/black"
                 android:shadowDx="1.2"
                 android:shadowDy="1.2"
                 android:shadowRadius="2.5"
-                android:text="Press to get planned roadworks" />
+                android:drawableStart="@android:drawable/ic_menu_today"
+                android:text="Planned roadworks"
+                android:layout_weight="1"/>
 
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Future roadworks on the road network"
+                android:textAlignment="center"
+                android:layout_marginTop="0dp"
+                android:padding="10dp"
+                android:autoLink="all"
+                android:textAppearance="?android:attr/textAppearanceListItemSecondary"
+                android:shadowColor="@color/black"
+                android:shadowRadius="1.5"
+                android:shadowDx="1.2"
+                android:shadowDy="1.2"
+                android:layout_weight="1"
+                >
+
+
+            </TextView>
+            </LinearLayout>
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:weightSum="2"
+    android:layout_margin="5dp"
+    android:layout_marginTop="10dp">
             <Button
                 android:id="@+id/currentButton"
-                style="@style/Widget.AppCompat.Button.Colored"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
-                android:layout_margin="10dp"
-                android:background="@color/purple_700"
+                android:layout_margin="0dp"
+                android:background="@color/CornflowerBlue"
+                android:drawableStart="@android:drawable/ic_menu_today"
                 android:padding="10dp"
                 android:radius="20dp"
                 android:shadowColor="@color/black"
                 android:shadowDx="1.2"
                 android:shadowDy="1.2"
                 android:shadowRadius="2.5"
-                android:text="Press to get current roadworks" />
+                android:layout_weight="1"
+                android:text="Current roadworks" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Roadworks currently being undertaken on the road network"
+                android:textAlignment="center"
+                android:layout_marginTop="0dp"
+                android:padding="10dp"
+                android:autoLink="all"
+                android:textAppearance="?android:attr/textAppearanceListItemSecondary"
+                android:shadowColor="@color/black"
+                android:shadowRadius="1.5"
+                android:shadowDx="1.2"
+                android:shadowDy="1.2"
+                android:layout_weight="1"
+                >
+
+
+            </TextView>
+</LinearLayout>
+
 
             <!--            <ListView-->
             <!--                android:id="@+id/listView1"-->
@@ -106,7 +182,14 @@
             <!--                android:layout_height="wrap_content"-->
             <!--                android:textSize="20sp"-->
             <!--                android:text="Raw Data is Displayed here"/>-->
-        </LinearLayout>
-    </ScrollView>
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                app:srcCompat="@drawable/logo_ts_blue" /></LinearLayout>
+
+
+    </RelativeLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
