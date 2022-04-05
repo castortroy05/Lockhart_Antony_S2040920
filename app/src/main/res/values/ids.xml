@@ -4,7 +4,9 @@
     <item name="itemDescription" type="id" />
     <item name="itemLink" type="id" />
     <item name="itemLocation" type="id" />
+    <item name="itemCount" type="id" />
     <item name="delayInfoArea" type="id" />
     <item name="delayInfoLabel" type="id" />
+    <item name="allRow" type="id" />
 
 </resources>

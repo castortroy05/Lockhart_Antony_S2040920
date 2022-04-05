@@ -24,18 +24,22 @@ public class MainActivity extends AppCompatActivity implements OnClickListener
         Button incidentButton = findViewById(R.id.incidentButton);
         Button plannedButton = findViewById(R.id.plannedButton);
         Button currentButton = findViewById(R.id.currentButton);
+        Button allButton = findViewById(R.id.allButton);
 
 
         incidentButton.setOnClickListener(this::readIncidents);
         plannedButton.setOnClickListener(this::readPlanned);
         currentButton.setOnClickListener(this::readCurrent);
+        allButton.setOnClickListener(this::readall);
 
     }
-//        Log.e("MyTag","after startButton");
-        // More Code goes here
 
-
-
+    private void readall(View v) {
+        String urlSource = "all";
+        Intent intent = new Intent (this, NetworkActions.class);
+        intent.putExtra(EXTRA_FEED, urlSource);
+        startActivity(intent);
+    }
 
 
     public void readPlanned (View v) {
@@ -67,12 +71,3 @@ public class MainActivity extends AppCompatActivity implements OnClickListener
 
     }
 }
-
-//public class MainActivity extends AppCompatActivity {
-//
-//    @Override
-//    protected void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_main);
-//    }
-//}

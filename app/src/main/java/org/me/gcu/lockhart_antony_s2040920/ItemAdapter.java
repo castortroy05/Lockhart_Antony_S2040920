@@ -1,12 +1,12 @@
 package org.me.gcu.lockhart_antony_s2040920;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 //import org.me.gcu.lockhart_antony_s2040920.Item;
@@ -20,14 +20,23 @@ public class ItemAdapter extends ArrayAdapter<Item> {
 
     private final List<Item> itemList;
 
+
     public ItemAdapter(Context context, int resource, List<Item> itemList) {
         super(context, resource, itemList);
         this.itemList = itemList;
+
     }
 
 
+
+
+
+
+    @SuppressLint("SimpleDateFormat")
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+
+
 
         Item item = getItem(position);
         if (convertView == null) {
@@ -44,35 +53,24 @@ public class ItemAdapter extends ArrayAdapter<Item> {
         TextView startDateLabel = convertView.findViewById(R.id.startDateLabel);
         TextView endDateLabel = convertView.findViewById(R.id.endDateLabel);
         TextView descriptionLabel = convertView.findViewById(R.id.descriptionLabel);
-        Log.e("FULLINFO", item.description.toString());
+
+
+
+
 
         if(item.description.contains("<br />")){
-        Log.e("Inside If",item.description.toString());
             String[] info = item.description.split("<br />");
 
-            Log.e("FULLINFO", item.description.toString());
 
             String endDateStr = "";
             String startDateStr;
-            String delayInformation = "";
 
                     startDateStr = info[0];
 
             if(info.length > 1)
                 endDateStr = info[1];
 
-            if(info.length>2){
-
-                String[] di = info[2].split(": ");
-
-
-                if(di.length>1)
-                    delayInformation = di[1];
-            }
-
             startDateStr = startDateStr.substring(12);
-            startDateStr.trim();
-            //startDateStr = startDateStr.
             endDateStr = endDateStr.substring(10);
             Date startDate = null;
             Date endDate = null;
@@ -90,14 +88,18 @@ public class ItemAdapter extends ArrayAdapter<Item> {
             Date endDate1 = endDate;
             delayInfoLabel.setVisibility(View.VISIBLE);
             txtDelayInfo.setText(info[2]);
-            txtStartDate.setText(startDate1.toString());
-            txtEndDate.setText(endDate1.toString());
+            if (startDate1 != null) {
+                txtStartDate.setText(startDate1.toString());
+            }
+            if (endDate1 != null) {
+                txtEndDate.setText(endDate1.toString());
+            }
             itemName.setText(item.title);
             if((info[2].contains("TYPE")) || (info[2].contains("Works"))){
-                itemName.setBackgroundResource(R.color.RoyalBlue);
+                itemName.setBackgroundResource(R.color.MediumVioletRed);
             }
             else {
-                itemName.setBackgroundResource(R.color.CornflowerBlue);
+                itemName.setBackgroundResource(R.color.DarkSeaGreen);
             }
             itemDescription.setText(item.description);
             itemDescription.setVisibility(View.GONE);
@@ -109,7 +111,6 @@ public class ItemAdapter extends ArrayAdapter<Item> {
             locationLink.append("https://www.google.com/maps?z=12&t=k&q=").append("loc:").append(latlong[0]).append("+").append(latlong[1]);
             itemLocation.setText(locationLink);
             return convertView;
-//            this.endDate = endDate;
         }
 else {
             txtDelayInfo.setVisibility(View.GONE);
@@ -119,7 +120,7 @@ else {
             txtEndDate.setVisibility(View.GONE);
             endDateLabel.setVisibility(View.GONE);
             itemName.setText(item.title);
-            itemName.setBackgroundResource(R.color.SteelBlue);
+            itemName.setBackgroundResource(R.color.MidnightBlue);
             itemDescription.setText(item.description);
             itemLink.setText(item.link);
             itemLink.setVisibility(View.GONE);
@@ -129,12 +130,14 @@ else {
             itemLocation.setText(locationLink);
         }
 
+
         return convertView;
     }
 
     @Override
     public int getCount() {
         return itemList.size();
+
     }
 
 }

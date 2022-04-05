@@ -4,39 +4,185 @@
     android:layout_height="match_parent"
     tools:context=".NetworkActions" >
 
-
-<!--    <WebView-->
-<!--        android:id="@+id/webview"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="173dp">-->
-
-<!--    </WebView>-->
-
-    <TextView
-        android:id="@+id/salutation"
-        android:layout_width="fill_parent"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:shadowColor="@color/black"
-        android:shadowDx="1.2"
-        android:shadowDy="1.2"
-        android:shadowRadius="2.5"
-        android:text="Antony Lockhart - S2040920 - MPD Coursework"
-        android:textAlignment="center"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        />
+        android:id="@+id/searching"
+        android:orientation="vertical">
+        <TextView
+            android:gravity="center"
+            android:id="@+id/itemCount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:padding="5dp"
+            android:autoLink="all"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:shadowColor="@color/black"
+            android:shadowRadius="1.5"
+            android:shadowDx="1.2"
+            android:shadowDy="1.2"
+            >
+        </TextView>
+
+        <EditText
+            android:gravity="center"
+            android:id="@+id/searchBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:padding="5dp"
+            android:autoLink="all"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:shadowColor="@color/black"
+            android:shadowRadius="1.5"
+            android:shadowDx="1.2"
+            android:shadowDy="1.2"
+            android:hint="Enter Search Term"
+            android:autofillHints=""
+            tools:ignore="TextFields">
+        </EditText>
 
 
+
+
+
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_below="@id/searching"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:id="@+id/buttonPanel"
+        android:weightSum="4"
+        >
+
+
+        <Button
+            android:id="@+id/incidentButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="0dp"
+            android:background="@color/SteelBlue"
+            android:shadowColor="@color/black"
+            android:shadowDx="1.2"
+            android:shadowDy="1.2"
+            android:shadowRadius="2.5"
+            android:text="Current incidents"
+            android:layout_weight="1"
+            tools:ignore="ButtonStyle,HardcodedText" />
+
+
+
+        <Button
+            android:id="@+id/plannedButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="0dp"
+            android:background="@color/RoyalBlue"
+            android:shadowColor="@color/black"
+            android:shadowDx="1.2"
+            android:shadowDy="1.2"
+            android:shadowRadius="2.5"
+            android:text="Planned roadworks"
+            android:layout_weight="1"
+            tools:ignore="ButtonStyle,HardcodedText" />
+
+        <Button
+            android:id="@+id/currentButton"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_margin="0dp"
+            android:background="@color/CornflowerBlue"
+            android:shadowColor="@color/black"
+            android:shadowDx="1.2"
+            android:shadowDy="1.2"
+            android:shadowRadius="2.5"
+            android:layout_weight="1"
+            android:text="Current roadworks"
+            tools:ignore="ButtonStyle,HardcodedText" />
+
+        <Button
+            android:id="@+id/allButton"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_margin="0dp"
+            android:background="@color/DarkSlateBlue"
+            android:shadowColor="@color/black"
+            android:shadowDx="1.2"
+            android:shadowDy="1.2"
+            android:shadowRadius="2.5"
+            android:layout_weight="1"
+            android:text="Load All"
+            tools:ignore="ButtonStyle,HardcodedText" />
+
+
+    </LinearLayout>
+
+
+    <!--            <ListView-->
+    <!--                android:id="@+id/listView1"-->
+    <!--                android:layout_width="match_parent"-->
+    <!--                android:layout_height="match_parent" />-->
+
+    <!--            <TextView-->
+    <!--                android:id="@+id/acknowledgement"-->
+    <!--                android:layout_width="fill_parent"-->
+    <!--                android:layout_height="wrap_content"-->
+    <!--                android:textSize="20sp"-->
+    <!--                android:text="Contains Traffic Scotland Data"/>-->
+    <!--            <TextView-->
+    <!--                android:id="@+id/rawDataDisplay"-->
+    <!--                android:layout_width="fill_parent"-->
+    <!--                android:layout_height="wrap_content"-->
+    <!--                android:textSize="20sp"-->
+    <!--                android:text="Raw Data is Displayed here"/>-->
+
+
+
+
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:layout_below="@id/buttonPanel">
+<!--    <TextView-->
+<!--        android:id="@+id/salutation"-->
+<!--        android:layout_width="fill_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:shadowColor="@color/black"-->
+<!--        android:shadowDx="1.2"-->
+<!--        android:shadowDy="1.2"-->
+<!--        android:shadowRadius="2.5"-->
+<!--        android:text="Antony Lockhart - S2040920 - MPD Coursework"-->
+<!--        android:textAlignment="center"-->
+<!--        android:textAppearance="?android:attr/textAppearanceMedium"-->
+<!--        />-->
+<!--    <ImageView-->
+<!--        android:id="@+id/imageView"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:padding="10dp"-->
+<!--        android:contentDescription="logo" />-->
 
     <ListView
         android:id="@+id/listView1"
-        style="@android:style/Widget.ListView.Menu"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="fill_parent"
-        android:layout_below="@+id/salutation"
-        android:layout_alignWithParentIfMissing="false"
         android:layout_marginTop="0dp"
         android:animateLayoutChanges="true"
         android:clickable="true"
         android:isScrollContainer="true" />
+</LinearLayout>
+
+
 
 </RelativeLayout>

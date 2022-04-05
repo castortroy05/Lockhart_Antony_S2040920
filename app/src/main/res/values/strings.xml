@@ -1,5 +1,4 @@
 <resources>
     <string name="app_name">Lockhart_Antony_S2040920</string>
-    <string name="title_activity_maps">MapsActivity</string>
     <item name="link" type="id" />
 </resources>

@@ -16,9 +16,6 @@ import org.me.gcu.lockhart_antony_s2040920.Item;
 
 
 public class PullParser {
-//    private List<FeedItem> feedItems =new ArrayList<FeedItem>();
-//    private FeedItem feedItem;
-    private String text;
     private static final String ns = null;
 
 
@@ -26,13 +23,10 @@ public class PullParser {
     public PullParser() throws XmlPullParserException {
     }
 
-//    public List<FeedItem> getFeedItems(){
-//        return feedItems;
-//    }
+
     public static List<Item> parse(InputStream is) throws XmlPullParserException, IOException{
 
         try {
-//            XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
             XmlPullParser parser = Xml.newPullParser();
             parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
             parser.setInput(is, null);
@@ -43,78 +37,7 @@ public class PullParser {
             is.close();
         }
     }
-//        return items;
-//        try {
-//            XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
-//            factory.setNamespaceAware(true);
-//            XmlPullParser parser = factory.newPullParser();
 //
-//            parser.setInput(is, null);
-//
-//            int eventType = parser.getEventType();
-//            parser.require(XmlPullParser.START_TAG,text,"channel");
-//            while (eventType != XmlPullParser.END_DOCUMENT) {
-//                String tagname = parser.getName();
-//                if(tagname!= null){
-//                Log.e("MyTag", tagname);}
-//
-//                Integer isItem = 0;
-//                switch (eventType) {
-//                    case XmlPullParser.START_TAG:
-//                        if (tagname.equalsIgnoreCase("channel")) {
-//                        feedItems = new ArrayList<FeedItem>();
-//                        }
-//                        else if (tagname.equalsIgnoreCase("item")) {
-//                            // create a new instance of feedItem
-//                            isItem = 1;
-//                            parser.nextTag();
-//                            feedItem = new FeedItem();
-//                            if(isItem !=0){
-//                                if (tagname.equalsIgnoreCase("title")) {
-//                                    text=parser.nextText();
-//                                    feedItem.setTitle(text);
-//                                } else if (tagname.equalsIgnoreCase("description")) {
-//                                    text=parser.nextText();
-//                                    feedItem.setDescription(text);
-//                                } else if (tagname.equalsIgnoreCase("geo:rss")) {
-//                                    text=parser.nextText();
-//                                    feedItem.setLocation(text);
-//                                }else if (tagname.equalsIgnoreCase("published")) {
-//                                    text=parser.nextText();
-//                                    feedItem.setPublished(text);
-//                                }
-//
-//                        }
-//                       }
-//
-//                        break;
-//
-//                    case XmlPullParser.TEXT:
-//                        text = parser.getText();
-//                        break;
-//
-//                    case XmlPullParser.END_TAG:
-//                        if (tagname.equalsIgnoreCase("item")) {
-//                            // add feedItem object to list
-//                            feedItems.add(feedItem);
-//                        }
-//                        break;
-//
-//                    default:
-//                        break;
-//                }
-//                eventType = parser.next();
-//            }
-//
-//        }
-//        catch (XmlPullParserException e) {e.printStackTrace();}
-
-
-
-
-
-
-
 
 
     private static ArrayList<Item> readFeed(XmlPullParser parser) throws XmlPullParserException, IOException {
@@ -123,26 +46,20 @@ public class PullParser {
         parser.nextTag();
         parser.require(XmlPullParser.START_TAG, ns, "channel");
 
-//        parser.require(XmlPullParser.START_TAG, null, "channel");
-//        Log.e("parser name ", parser.getName());
-//        parser.nextTag();
 
         while (parser.next() != XmlPullParser.END_DOCUMENT) {
             if (parser.getEventType() != XmlPullParser.START_TAG) {
-//                parser.nextTag();
                 continue;
 
             }
 
             String name = parser.getName();
-//            while (name != "item"){parser.nextTag();}
             Log.e("tag ", name);
             // Starts by looking for the item tag
             if (name.equals("item")) {
                 items.add(readItem(parser));
             } else {
                 skip(parser);
-//                parser.nextTag();
             }
         }
         return items;
@@ -166,24 +83,6 @@ public class PullParser {
     }
 
 
-//    public static class Item {
-//        public final String title;
-//        public final String link;
-//        public final String description;
-//        public final String location;
-//        public final String date;
-////        public final int uuid;
-//
-//        private Item(String title, String description, String link, String location, String date) {
-//            this.title = title;
-//            this.description = description;
-//            this.link = link;
-//            this.location = location;
-//            this.date = date;
-////            this.uuid = Integer.parseInt(UUID.randomUUID().toString());
-//        }
-//    }
-
     // Parses the contents of an entry. If it encounters a title, summary, or link tag, hands them off
     // to their respective "read" methods for processing. Otherwise, skips the tag.
     private static Item readItem(XmlPullParser parser) throws XmlPullParserException, IOException {
@@ -193,37 +92,33 @@ public class PullParser {
         String link = null;
         String location = null;
         String date = null;
-//        int uuid = Integer.parseInt(UUID.randomUUID().toString());
-        while (parser.next() != XmlPullParser.END_TAG) {
-            if (parser.getEventType() != XmlPullParser.START_TAG) {
-                continue;
-            }
-            String name = parser.getName();
-            switch (name) {
-                case "title":
-                    title = readTitle(parser);
-//                    Log.e(parser.getName(), title);
-                    break;
-                case "description":
-                    description = readDescription(parser);
-//                    Log.e(parser.getName(), description);
-                    break;
-                case "link":
-                    link = readLink(parser);
-//                    Log.e(parser.getName(), link);
-                    break;
-                case "georss:point":
-                    location = readLocation(parser);
-//                    Log.e(parser.getName(), location);
-                    break;
-                case "pubDate":
-                    date = readDate(parser);
-//                    Log.e(parser.getName(), date);
-                    break;
-                default:
-                    skip(parser);
-                    break;
-            }
+        if (parser.next() != XmlPullParser.END_TAG) {
+            do {
+                if (parser.getEventType() != XmlPullParser.START_TAG) {
+                    continue;
+                }
+                String name = parser.getName();
+                switch (name) {
+                    case "title":
+                        title = readTitle(parser);
+                        break;
+                    case "description":
+                        description = readDescription(parser);
+                        break;
+                    case "link":
+                        link = readLink(parser);
+                        break;
+                    case "georss:point":
+                        location = readLocation(parser);
+                        break;
+                    case "pubDate":
+                        date = readDate(parser);
+                        break;
+                    default:
+                        skip(parser);
+                        break;
+                }
+            } while (parser.next() != XmlPullParser.END_TAG);
         }
         return new Item(title, description, link, location, date);
     }
