@@ -1,9 +1,8 @@
 package org.me.gcu.lockhart_antony_s2040920;
 
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.UUID;
 
 public class Item {
     public Item(String title, String link, String description, String location, String date, String author, String comments, String pubDate, Date endDate) {
@@ -32,61 +31,66 @@ public class Item {
     private final int daysToComplete = 0;
 //        public final int uuid;
 
-    public Item(String title, String description, String link, String location, String date) {
+    public Item(String title, String description, String link, String location, String date, Object uuid) {
         this.title = title;
         this.description = description;
         this.link = link;
         this.location = location;
         this.date = date;
-//            this.uuid = Integer.parseInt(UUID.randomUUID().toString());
+        uuid = UUID.randomUUID().hashCode();
     }
 
-    public void setDescription(String description)  {
-
-        if(description.contains("<br />")){
-
-        String[] info = description.split("<br />");
-
-        //Log.e("FULLINFO", description.toString());
-
-        String endDateStr = "";
-        String startDateStr;
-
-        startDateStr = info[0];
-
-        if(info.length > 1)
-            endDateStr = info[1];
-
-        if(info.length>2){
-
-            String[] di = info[2].split(": ");
-
-            String delayInformation = "";
-            if(di.length>1)
-                delayInformation = di[1];
-        }
-
-        startDateStr = startDateStr.substring(12);
-        startDateStr.trim();
-        //startDateStr = startDateStr.
-        endDateStr = endDateStr.substring(10);
-        Date startDate = null;
-        Date endDate = null;
-
-        try {
-            startDate = new SimpleDateFormat("EE, dd MMMM yyyy - kk:mm").parse(startDateStr);
-            endDate = new SimpleDateFormat("EE, dd MMMM yyyy - kk:mm").parse(endDateStr);
-        } catch (ParseException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-
-
-            Date startDate1 = startDate;
-        this.endDate = endDate;
-        }
-        this.description = description;
+    public static <K, T> K getUuid(T t) {
+        return (K) t;
     }
+
+
+//    public void setDescription(String description)  {
+//
+//        if(description.contains("<br />")){
+//
+//        String[] info = description.split("<br />");
+//
+//        //Log.e("FULLINFO", description.toString());
+//
+//        String endDateStr = "";
+//        String startDateStr;
+//
+//        startDateStr = info[0];
+//
+//        if(info.length > 1)
+//            endDateStr = info[1];
+//
+//        if(info.length>2){
+//
+//            String[] di = info[2].split(": ");
+//
+//            String delayInformation = "";
+//            if(di.length>1)
+//                delayInformation = di[1];
+//        }
+//
+//        startDateStr = startDateStr.substring(12);
+//        startDateStr.trim();
+//        //startDateStr = startDateStr.
+//        endDateStr = endDateStr.substring(10);
+//        Date startDate = null;
+//        Date endDate = null;
+//
+//        try {
+//            startDate = new SimpleDateFormat("EE, dd MMMM yyyy - kk:mm").parse(startDateStr);
+//            endDate = new SimpleDateFormat("EE, dd MMMM yyyy - kk:mm").parse(endDateStr);
+//        } catch (ParseException e) {
+//            // TODO Auto-generated catch block
+//            e.printStackTrace();
+//        }
+//
+//
+//            Date startDate1 = startDate;
+//        this.endDate = endDate;
+//        }
+//        this.description = description;
+//    }
     }
 
 

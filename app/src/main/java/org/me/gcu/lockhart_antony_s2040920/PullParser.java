@@ -92,6 +92,7 @@ public class PullParser {
         String link = null;
         String location = null;
         String date = null;
+        Object uuid =null;
         if (parser.next() != XmlPullParser.END_TAG) {
             do {
                 if (parser.getEventType() != XmlPullParser.START_TAG) {
@@ -120,7 +121,7 @@ public class PullParser {
                 }
             } while (parser.next() != XmlPullParser.END_TAG);
         }
-        return new Item(title, description, link, location, date);
+        return new Item(title, description, link, location, date, uuid);
     }
 
     // Processes title tags in the feed.

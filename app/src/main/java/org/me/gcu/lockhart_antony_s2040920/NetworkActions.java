@@ -3,6 +3,7 @@ package org.me.gcu.lockhart_antony_s2040920;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ArrayAdapter;
@@ -17,11 +18,17 @@ import java.net.URL;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class NetworkActions extends Activity {
     public ArrayList<Item> loadedItems = new ArrayList<>();
     public ArrayList<Item> loadedAllItems = new ArrayList<>();
+    HashMap<Item, List<Item>> itemsHashmap = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +41,14 @@ public class NetworkActions extends Activity {
 
         new Thread(new Task(urlSource)).start();
 
+        
+
+
     }
+
+
+
+
 
     private class Task implements Runnable
     {
@@ -66,11 +80,51 @@ public class NetworkActions extends Activity {
             ListView lv = findViewById(R.id.listView1);
             adapter = new ItemAdapter(NetworkActions.this, R.layout.list_item, loadedItems
             );
-            TextView itemCount = (TextView) findViewById(R.id.itemCount);
-            itemCount.setText(new StringBuilder().append("Displaying ").append(String.valueOf(loadedItems.size() + " items")).toString());
+            TextView itemCount = findViewById(R.id.itemCount);
+            //pass arraylist with uuid to map method
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                Map<Item, List<Item>> map = loadedItems.stream().collect(Collectors.groupingBy(Item::getUuid));
+                Log.e("MyTag", "map: " + map);
+                itemsHashmap = (HashMap<Item, List<Item>>) map;
+                //assign the map to a HashMap for global access
+
+
+            }
+            
+
+            
+            itemCount.setText(new StringBuilder().append("Displaying ").append(loadedItems.size() + " items").toString());
             lv.setAdapter(adapter);
 
         }
+    }
+
+   //convert array list loadedItems to HashMap using uuid as key
+    //then use uuid as key to get list of items with that uuid
+       private Map<String, List<Item>> getMap(ArrayList<Item> loadedItems) {
+           if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+               return loadedItems.stream().collect(Collectors.groupingBy(Item::getUuid));
+           }
+           return getMap(loadedItems);
+           
+       }
+
+
+   
+
+    //get text from searchBox and search for matching items in arraylist
+    private void search(String searchText) {
+        ArrayAdapter<Item> adapter;
+        ListView lv = findViewById(R.id.listView1);
+        adapter = new ItemAdapter(NetworkActions.this, R.layout.list_item, loadedItems
+        );
+        TextView itemCount = findViewById(R.id.itemCount);
+        //pass arraylist with generated id to map method
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+            Map<String, List<Item>> groupedItems = loadedItems.stream().collect(Collectors.groupingBy(Item::getUuid));
+        }
+        itemCount.setText(new StringBuilder().append("Displaying ").append(loadedItems.size() + " items").toString());
+        lv.setAdapter(adapter);
     }
 
     private ArrayList<Item> loadXmlFromNetwork(String urlString)
@@ -84,7 +138,6 @@ public class NetworkActions extends Activity {
             // finished using it.
         }
 
-        // Store retrieve each item and format it as an html string
         return loadedItems;
     }
 
@@ -103,7 +156,7 @@ public class NetworkActions extends Activity {
 
         }
 
-        // Store retrieve each item and format it as an html string
+        
         return loadedAllItems;
     }
 

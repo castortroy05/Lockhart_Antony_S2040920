@@ -8,22 +8,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/searching"
+        android:layout_below="@id/buttonPanel"
         android:orientation="vertical">
-        <TextView
-            android:gravity="center"
-            android:id="@+id/itemCount"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAlignment="center"
-            android:padding="5dp"
-            android:autoLink="all"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:shadowColor="@color/black"
-            android:shadowRadius="1.5"
-            android:shadowDx="1.2"
-            android:shadowDy="1.2"
-            >
-        </TextView>
 
         <EditText
             android:gravity="center"
@@ -40,8 +26,26 @@
             android:shadowDy="1.2"
             android:hint="Enter Search Term"
             android:autofillHints=""
+
             tools:ignore="TextFields">
         </EditText>
+        <TextView
+            android:gravity="center"
+            android:id="@+id/itemCount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:padding="5dp"
+            android:autoLink="all"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:shadowColor="@color/black"
+            android:shadowRadius="1.5"
+            android:shadowDx="1.2"
+            android:shadowDy="1.2"
+            >
+        </TextView>
+
+
 
 
 
@@ -52,7 +56,6 @@
 
 
     <LinearLayout
-        android:layout_below="@id/searching"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -153,7 +156,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:layout_below="@id/buttonPanel">
+    android:layout_below="@id/searching">
 <!--    <TextView-->
 <!--        android:id="@+id/salutation"-->
 <!--        android:layout_width="fill_parent"-->

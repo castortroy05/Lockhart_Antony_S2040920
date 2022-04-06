@@ -13,6 +13,14 @@ import androidx.appcompat.app.AppCompatActivity;
 public class MainActivity extends AppCompatActivity implements OnClickListener
 {
     public final static String EXTRA_FEED ="org.me.gcu.lockhart_antony_s2040920.FEED";
+   
+    public final static String plannedroadworks = "https://trafficscotland.org/rss/feeds/plannedroadworks.aspx";
+    public final static String currentroadworks = "https://trafficscotland.org/rss/feeds/roadworks.aspx";
+    public final static String currentIncidents = "https://trafficscotland.org/rss/feeds/currentincidents.aspx";
+
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
 
@@ -43,25 +51,22 @@ public class MainActivity extends AppCompatActivity implements OnClickListener
 
 
     public void readPlanned (View v) {
-        String urlSource = "https://trafficscotland.org/rss/feeds/plannedroadworks.aspx";
         Intent intent = new Intent (this, NetworkActions.class);
-        intent.putExtra(EXTRA_FEED, urlSource);
+        intent.putExtra(EXTRA_FEED, plannedroadworks);
         startActivity(intent);
 
     }
 
     public void readIncidents (View v) {
-        String urlSource = "https://trafficscotland.org/rss/feeds/currentincidents.aspx";
         Intent intent = new Intent (this, NetworkActions.class);
-        intent.putExtra(EXTRA_FEED, urlSource);
+        intent.putExtra(EXTRA_FEED, currentIncidents);
         startActivity(intent);
 
     }
 
     public void readCurrent (View v) {
-        String urlSource = "https://trafficscotland.org/rss/feeds/roadworks.aspx";
         Intent intent = new Intent (this, NetworkActions.class);
-        intent.putExtra(EXTRA_FEED, urlSource);
+        intent.putExtra(EXTRA_FEED, currentroadworks);
         startActivity(intent);
 
     }
