@@ -26,9 +26,28 @@
             android:shadowDy="1.2"
             android:hint="Enter Search Term"
             android:autofillHints=""
+            android:layout_weight="0.5"
 
             tools:ignore="TextFields">
         </EditText>
+
+
+<!-- create a search button -->
+        <Button
+            android:id="@+id/searchButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="10dp"
+            android:layout_marginRight="10dp"
+            android:text="Search"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@color/white"
+            android:padding="10dp"
+            android:layout_weight="0.5"
+            android:onClick="searchItems" />
+
         <TextView
             android:gravity="center"
             android:id="@+id/itemCount"
@@ -77,6 +96,7 @@
             android:shadowRadius="2.5"
             android:text="Current incidents"
             android:layout_weight="1"
+            android:onClick="readIncidents"
             tools:ignore="ButtonStyle,HardcodedText" />
 
 
@@ -94,6 +114,7 @@
             android:shadowRadius="2.5"
             android:text="Planned roadworks"
             android:layout_weight="1"
+            android:onClick="readPlanned"
             tools:ignore="ButtonStyle,HardcodedText" />
 
         <Button
@@ -109,6 +130,7 @@
             android:shadowRadius="2.5"
             android:layout_weight="1"
             android:text="Current roadworks"
+            android:onClick="readCurrent"
             tools:ignore="ButtonStyle,HardcodedText" />
 
         <Button
@@ -124,6 +146,7 @@
             android:shadowRadius="2.5"
             android:layout_weight="1"
             android:text="Load All"
+            android:onClick="readAllFeeds"
             tools:ignore="ButtonStyle,HardcodedText" />
 
 

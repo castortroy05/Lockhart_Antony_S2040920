@@ -1,12 +1,20 @@
 package org.me.gcu.lockhart_antony_s2040920;
 
 
+import static org.me.gcu.lockhart_antony_s2040920.MainActivity.currentIncidents;
+import static org.me.gcu.lockhart_antony_s2040920.MainActivity.currentroadworks;
+import static org.me.gcu.lockhart_antony_s2040920.MainActivity.plannedroadworks;
+
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -21,8 +29,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
-import java.util.function.Function;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class NetworkActions extends Activity {
@@ -38,6 +45,15 @@ public class NetworkActions extends Activity {
 
         Intent intent = getIntent();
         String urlSource = intent.getStringExtra(MainActivity.EXTRA_FEED);
+        Button searchButton = findViewById(R.id.searchButton);
+        EditText searchBox = findViewById(R.id.searchBox);
+        searchButton.setOnClickListener(
+                view -> {
+                    Log.v("EditText", searchBox.getText().toString());
+                    search(searchBox.getText().toString());
+                });
+
+
 
         new Thread(new Task(urlSource)).start();
 
@@ -46,6 +62,40 @@ public class NetworkActions extends Activity {
 
     }
 
+    public void searchItems(View view) {
+        EditText searchBox = findViewById(R.id.searchBox);
+        String searchText = searchBox.getText().toString();
+        search(searchText);
+    }
+
+    public void readAllFeeds(View view) {
+        loadList("all");
+    }
+
+    private void loadList(String list) {
+        if(loadedItems.isEmpty()) {
+            new Thread(new Task(list)).start();
+        }
+        else{
+            loadedItems.clear();
+            new Thread(new Task(list)).start();
+        }
+        }
+
+    public void readCurrent(View view) {
+        loadList(currentroadworks);
+
+    }
+
+    public void readPlanned(View view) {
+        loadList(plannedroadworks);
+
+    }
+
+    public void readIncidents(View view) {
+        loadList(currentIncidents);
+
+    }
 
 
 
@@ -74,6 +124,7 @@ public class NetworkActions extends Activity {
             NetworkActions.this.runOnUiThread(this::run2);
         }
 
+        @SuppressLint("SetTextI18n")
         private void run2() {
             setContentView(R.layout.activity_results);
             ArrayAdapter<Item> adapter;
@@ -86,14 +137,14 @@ public class NetworkActions extends Activity {
                 Map<Item, List<Item>> map = loadedItems.stream().collect(Collectors.groupingBy(Item::getUuid));
                 Log.e("MyTag", "map: " + map);
                 itemsHashmap = (HashMap<Item, List<Item>>) map;
-                //assign the map to a HashMap for global access
+                
 
 
             }
             
 
             
-            itemCount.setText(new StringBuilder().append("Displaying ").append(loadedItems.size() + " items").toString());
+            itemCount.setText("Displaying " + loadedItems.size() + " items");
             lv.setAdapter(adapter);
 
         }
@@ -109,21 +160,30 @@ public class NetworkActions extends Activity {
            
        }
 
+       //onclick function for search button
+       
+
 
    
 
     //get text from searchBox and search for matching items in arraylist
+    @SuppressLint("SetTextI18n")
     private void search(String searchText) {
         ArrayAdapter<Item> adapter;
         ListView lv = findViewById(R.id.listView1);
-        adapter = new ItemAdapter(NetworkActions.this, R.layout.list_item, loadedItems
-        );
+        //search for matching items in arraylist
+        List<Item> searchResults = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+            searchResults = loadedItems.stream().filter(item -> item.title.toLowerCase().contains(searchText.toLowerCase())).collect(Collectors.toList());
+        }
+        adapter = new ItemAdapter(NetworkActions.this, R.layout.list_item, searchResults);
+
         TextView itemCount = findViewById(R.id.itemCount);
         //pass arraylist with generated id to map method
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-            Map<String, List<Item>> groupedItems = loadedItems.stream().collect(Collectors.groupingBy(Item::getUuid));
-        }
-        itemCount.setText(new StringBuilder().append("Displaying ").append(loadedItems.size() + " items").toString());
+//        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+//            Map<String, List<Item>> groupedItems = loadedItems.stream().collect(Collectors.groupingBy(Item::getUuid));
+//        }
+        itemCount.setText("Displaying " + Objects.requireNonNull(searchResults).size() + " items");
         lv.setAdapter(adapter);
     }
 

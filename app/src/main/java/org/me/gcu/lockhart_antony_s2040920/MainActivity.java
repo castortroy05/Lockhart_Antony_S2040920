@@ -38,11 +38,11 @@ public class MainActivity extends AppCompatActivity implements OnClickListener
         incidentButton.setOnClickListener(this::readIncidents);
         plannedButton.setOnClickListener(this::readPlanned);
         currentButton.setOnClickListener(this::readCurrent);
-        allButton.setOnClickListener(this::readall);
+        allButton.setOnClickListener(this::readAllFeeds);
 
     }
 
-    private void readall(View v) {
+    private void readAllFeeds(View v) {
         String urlSource = "all";
         Intent intent = new Intent (this, NetworkActions.class);
         intent.putExtra(EXTRA_FEED, urlSource);
