@@ -32,8 +32,7 @@ public class Item {
     }
 
     public static <K, T> K getUuid(T t) {
-        final K t1 = (K) t;
-        return t1;
+        return (K) t;
     }
 
 
