@@ -3,6 +3,7 @@ package org.me.gcu.lockhart_antony_s2040920;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -65,14 +66,9 @@ public class ItemAdapter extends ArrayAdapter<Item> {
 
         if(item.description.contains("<br />")){
             String[] info = item.description.split("<br />");
-
-
+            String startDateStr = info[0];
 
             String endDateStr = "";
-            String startDateStr;
-
-                    startDateStr = info[0];
-
             if(info.length > 1)
                 endDateStr = info[1];
 
@@ -93,16 +89,20 @@ public class ItemAdapter extends ArrayAdapter<Item> {
             Date startDate1 = startDate;
             Date endDate1 = endDate;
             delayInfoLabel.setVisibility(View.VISIBLE);
-
+            Log.e("Crash", info[1]);
+            if(info[2] != null){
             txtDelayInfo.setText(info[2]);
-            if(info[2].contains("Delay Information")){delayInfoLabel.setVisibility(View.GONE);}
+            if(info[2].contains("Delay Information")){delayInfoLabel.setVisibility(View.GONE);}}
             if (startDate1 != null) {
                 txtStartDate.setText(startDate1.toString());
             }
             if (endDate1 != null) {
                 txtEndDate.setText(endDate1.toString());
             }
-            itemName.setText(item.title);
+            if(item.title == null){item.title = "No title in file";
+            itemName.setText(item.title.toUpperCase());}
+            else{itemName.setText(item.title.toUpperCase());}
+
             if((info[2].contains("TYPE")) || (info[2].contains("Works"))){
                 itemName.setBackgroundResource(R.color.RoyalBlue);
             }
@@ -130,7 +130,10 @@ else {
             startDateLabel.setVisibility(View.GONE);
             txtEndDate.setVisibility(View.GONE);
             endDateLabel.setVisibility(View.GONE);
-            itemName.setText(item.title);
+            if(item.title == null){item.title = "No title in file";
+
+                itemName.setText(item.title.toUpperCase());}
+            else{            itemName.setText(item.title.toUpperCase());}
             itemName.setBackgroundResource(R.color.DodgerBlue);
             itemDescription.setText(item.description);
             itemLink.setText(item.link);

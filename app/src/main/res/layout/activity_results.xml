@@ -172,9 +172,7 @@
             android:shadowDx="1.2"
             android:shadowDy="1.2"
             android:textAlignment="center"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            tools:ignore="HardcodedText,KeyboardInaccessibleWidget"
-            android:importantForAutofill="no" />
+            />
 
 
         <!-- create a search button -->

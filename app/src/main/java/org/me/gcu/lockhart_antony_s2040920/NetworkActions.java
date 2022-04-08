@@ -1,7 +1,6 @@
 package org.me.gcu.lockhart_antony_s2040920;
 //Lockhart_Antony_S2040920
 
-
 import static org.me.gcu.lockhart_antony_s2040920.MainActivity.currentIncidents;
 import static org.me.gcu.lockhart_antony_s2040920.MainActivity.currentroadworks;
 import static org.me.gcu.lockhart_antony_s2040920.MainActivity.plannedroadworks;
@@ -23,6 +22,7 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -53,8 +53,8 @@ public class NetworkActions extends AppCompatActivity {
     public ArrayList<Item> loadedAllItems = new ArrayList<>();
     HashMap<Item, List<Item>> itemsHashmap = new HashMap<>();
 
-    @SuppressLint({"ClickableViewAccessibility", "SetTextI18n"})
     @RequiresApi(api = Build.VERSION_CODES.N)
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,7 +76,7 @@ public class NetworkActions extends AppCompatActivity {
                 int year = cldr.get(Calendar.YEAR);
                 // date picker dialog
                 picker = new DatePickerDialog(NetworkActions.this,
-                        (view, year1, monthOfYear, dayOfMonth) -> dateSearchText.setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year1), year, month, day);
+                        (DatePicker view, int year1, int monthOfYear, int dayOfMonth) -> dateSearchText.setText(new StringBuilder().append(dayOfMonth).append("/").append(monthOfYear + 1).append("/").append(year1).toString()), year, month, day);
                 picker.show();
             }
             return false;
@@ -156,6 +156,7 @@ public class NetworkActions extends AppCompatActivity {
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     public void searchItems(View view) {
         EditText searchBox = findViewById(R.id.searchBox);
         String searchText = searchBox.getText().toString();
@@ -207,15 +208,15 @@ public class NetworkActions extends AppCompatActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void getDate(View view) {
-        DatePickerDialog picker;
         EditText dateSearchText = findViewById(R.id.dateSearchText);
         final Calendar cldr = Calendar.getInstance();
         int day = cldr.get(Calendar.DAY_OF_MONTH);
         int month = cldr.get(Calendar.MONTH);
         int year = cldr.get(Calendar.YEAR);
         // date picker dialog
+        DatePickerDialog picker;
         picker = new DatePickerDialog(NetworkActions.this,
-                (v, year1, monthOfYear, dayOfMonth) -> dateSearchText.setText(MessageFormat.format("{0}/{1}/{2}", dayOfMonth, monthOfYear + 1, year1)), year, month, day);
+                (DatePicker v, int year1, int monthOfYear, int dayOfMonth) -> dateSearchText.setText(new StringBuilder().append(dayOfMonth).append("/").append(monthOfYear + 1).append("/").append(year1).toString()), year, month, day);
         picker.show();
     }
 
@@ -282,22 +283,27 @@ public class NetworkActions extends AppCompatActivity {
    
 
     //get text from searchBox and search for matching items in arraylist
-    @SuppressLint("SetTextI18n")
     private void searchRoad(String searchText) {
         ArrayAdapter<Item> adapter;
         ListView lv = findViewById(R.id.listView1);
         //search for matching items in arraylist
-        List<Item> searchResults = null;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-            searchResults = loadedItems.stream().filter(item -> item.title.toLowerCase().contains(searchText.toLowerCase())).collect(Collectors.toList());
+
+        List<Item> searchResults = new ArrayList<>();
+        for (Item item : loadedItems) {
+            if(item.title == null){
+                Log.e("Empty Title", item.description.toUpperCase());}
+            else{
+            Log.e("Searching", item.title);}
+            if (item.title !=null && (item.title.equalsIgnoreCase(searchText) || item.title.contains(searchText))) {
+                searchResults.add(item);
+            }
         }
+
+        Log.e("SearchResults List", String.valueOf(searchResults));
         adapter = new ItemAdapter(NetworkActions.this, R.layout.list_item, searchResults);
 
         TextView itemCount = findViewById(R.id.itemCount);
-        //pass arraylist with generated id to map method
-//        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-//            Map<String, List<Item>> groupedItems = loadedItems.stream().collect(Collectors.groupingBy(Item::getUuid));
-//        }
+
         itemCount.setText("Displaying " + Objects.requireNonNull(searchResults).size() + " items");
         lv.setAdapter(adapter);
     }
