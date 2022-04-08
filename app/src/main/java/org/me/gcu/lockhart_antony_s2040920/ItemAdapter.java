@@ -1,15 +1,13 @@
 package org.me.gcu.lockhart_antony_s2040920;
+//Lockhart_Antony_S2040920
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
-
-//import org.me.gcu.lockhart_antony_s2040920.Item;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -95,7 +93,9 @@ public class ItemAdapter extends ArrayAdapter<Item> {
             Date startDate1 = startDate;
             Date endDate1 = endDate;
             delayInfoLabel.setVisibility(View.VISIBLE);
+
             txtDelayInfo.setText(info[2]);
+            if(info[2].contains("Delay Information")){delayInfoLabel.setVisibility(View.GONE);}
             if (startDate1 != null) {
                 txtStartDate.setText(startDate1.toString());
             }
@@ -104,20 +104,23 @@ public class ItemAdapter extends ArrayAdapter<Item> {
             }
             itemName.setText(item.title);
             if((info[2].contains("TYPE")) || (info[2].contains("Works"))){
-                itemName.setBackgroundResource(R.color.MediumVioletRed);
+                itemName.setBackgroundResource(R.color.RoyalBlue);
             }
             else {
-                itemName.setBackgroundResource(R.color.DarkSeaGreen);
+                itemName.setBackgroundResource(R.color.CornflowerBlue);
             }
             itemDescription.setText(item.description);
             itemDescription.setVisibility(View.GONE);
             descriptionLabel.setVisibility(View.GONE);
+//            delayInfoLabel.setVisibility(View.GONE);
             itemLink.setText(item.link);
             itemLink.setVisibility(View.GONE);
             String[] latlong = item.location.split(" ");
             StringBuilder locationLink = new StringBuilder();
             locationLink.append("https://www.google.com/maps?z=12&t=k&q=").append("loc:").append(latlong[0]).append("+").append(latlong[1]);
             itemLocation.setText(locationLink);
+            itemLocation.setVisibility(View.GONE);
+
             return convertView;
         }
 else {
@@ -128,10 +131,11 @@ else {
             txtEndDate.setVisibility(View.GONE);
             endDateLabel.setVisibility(View.GONE);
             itemName.setText(item.title);
-            itemName.setBackgroundResource(R.color.MidnightBlue);
+            itemName.setBackgroundResource(R.color.DodgerBlue);
             itemDescription.setText(item.description);
             itemLink.setText(item.link);
             itemLink.setVisibility(View.GONE);
+            itemLocation.setVisibility(View.GONE);
             String[] latlong = item.location.split(" ");
             StringBuilder locationLink = new StringBuilder();
             locationLink.append("https://www.google.com/maps?z=12&t=k&q=").append("loc:").append(latlong[0]).append("+").append(latlong[1]);

@@ -1,5 +1,5 @@
 package org.me.gcu.lockhart_antony_s2040920;
-
+//Lockhart_Antony_S2040920
 
 import java.util.Date;
 import java.util.UUID;
@@ -11,10 +11,6 @@ public class Item {
         this.description = description;
         this.location = location;
         this.date = date;
-        this.author = author;
-        this.comments = comments;
-        this.pubDate = pubDate;
-        this.endDate = endDate;
     }
 
     public  String title;
@@ -22,22 +18,18 @@ public class Item {
     public String description;
     public  String location;
     public  String date;
-    private String author;
-    private String comments;
-    private String pubDate;
 
 
-    private Date endDate;
     private final int daysToComplete = 0;
 //        public final int uuid;
 
-    public Item(String title, String description, String link, String location, String date, Object uuid) {
+    public Item(String title, String description, String link, String location, String date) {
         this.title = title;
         this.description = description;
         this.link = link;
         this.location = location;
         this.date = date;
-        uuid = UUID.randomUUID().hashCode();
+        Object uuid = UUID.randomUUID().hashCode();
     }
 
     public static <K, T> K getUuid(T t) {

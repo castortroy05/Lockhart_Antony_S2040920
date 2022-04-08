@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+<!--    Lockhart_Antony_S2040920-->
+
+    <!-- MPD XML Starter code Semester B Session 2020 2021 -->
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:ignore="MissingConstraints"
+        >
+
+<!--        <LinearLayout-->
+<!--            android:layout_width="fill_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            -->
+<!--            android:orientation="vertical"-->
+<!--            android:weightSum="1">-->
+
+<!--            <TextView-->
+<!--                android:id="@+id/salutation"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="0dp"-->
+<!--                android:shadowColor="@color/black"-->
+
+<!--                android:shadowDx="1.2"-->
+<!--                android:shadowDy="1.2"-->
+<!--                android:shadowRadius="2.5"-->
+<!--                android:padding="20dp"-->
+<!--                android:text="Welcome to Mobile Platform Development Assignment-->
+<!--2021-2022"-->
+<!--                android:textAlignment="center"-->
+<!--                android:textAppearance="?android:attr/textAppearanceLarge"-->
+<!--                android:layout_weight="1"-->
+<!--                />-->
+        <LinearLayout
+            android:id="@+id/incidentRow"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="5dp"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <Button
+                android:id="@+id/incidentButton"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="0dp"
+                android:layout_weight="1"
+                android:background="@color/DodgerBlue"
+                android:drawableStart="@android:drawable/ic_menu_today"
+                android:padding="15dp"
+                android:shadowColor="@color/DarkGray"
+                android:shadowDx="1.2"
+                android:shadowDy="1.2"
+                android:shadowRadius="1.5"
+                android:text="Current incidents" />
+
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="0dp"
+                android:layout_weight="1"
+                android:autoLink="all"
+                android:padding="10dp"
+                android:shadowColor="@color/DarkGray"
+                android:shadowDx="1.2"
+                android:shadowDy="1.2"
+                android:shadowRadius="1.5"
+                android:text="Current incidents on the road network e.g. accidents"
+                android:textAlignment="center"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1">
+
+
+            </TextView>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/plannedRow"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/incidentRow"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="5dp"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <Button
+                android:id="@+id/plannedButton"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="0dp"
+                android:layout_weight="1"
+                android:background="@color/RoyalBlue"
+                android:drawableStart="@android:drawable/ic_menu_today"
+                android:padding="15dp"
+                android:shadowColor="@color/DarkGray"
+                android:shadowDx="1.2"
+                android:shadowDy="1.2"
+                android:shadowRadius="1.5"
+                android:text="Planned roadworks" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="0dp"
+                android:layout_weight="1"
+                android:autoLink="all"
+                android:padding="10dp"
+                android:shadowColor="@color/DarkGray"
+                android:shadowDx="1.2"
+                android:shadowDy="1.2"
+                android:shadowRadius="1.5"
+                android:text="Future roadworks on the road network"
+                android:textAlignment="center"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1">
+
+
+            </TextView>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/currentRow"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/plannedRow"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="5dp"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <Button
+                android:id="@+id/currentButton"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_margin="0dp"
+                android:layout_weight="1"
+                android:background="@color/CornflowerBlue"
+                android:drawableStart="@android:drawable/ic_menu_today"
+                android:padding="10dp"
+                android:radius="20dp"
+                android:shadowColor="@color/DarkGray"
+                android:shadowDx="1.2"
+                android:shadowDy="1.2"
+                android:shadowRadius="1.5"
+                android:text="Current roadworks" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="0dp"
+                android:layout_weight="1"
+                android:autoLink="all"
+                android:padding="10dp"
+                android:shadowColor="@color/DarkGray"
+                android:shadowDx="1.2"
+                android:shadowDy="1.2"
+                android:shadowRadius="1.5"
+                android:text="Roadworks currently being undertaken on the road network"
+                android:textAlignment="center"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1">
+
+
+            </TextView>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/allRow"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/currentRow"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="5dp"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <Button
+                android:id="@+id/allButton"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_margin="0dp"
+                android:layout_weight="1"
+                android:background="@color/DeepSkyBlue"
+                android:drawableStart="@android:drawable/ic_menu_today"
+                android:padding="10dp"
+                android:shadowColor="@color/DarkGray"
+                android:shadowDx="1.2"
+                android:shadowDy="1.2"
+                android:shadowRadius="1.5"
+                android:text="Load All Items" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="0dp"
+                android:layout_weight="1"
+                android:autoLink="all"
+                android:padding="25dp"
+                android:shadowColor="@color/DarkGray"
+                android:shadowDx="1.2"
+                android:shadowDy="1.2"
+                android:shadowRadius="1.5"
+                android:text="Show all items"
+                android:textAlignment="center"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1">
+
+
+            </TextView>
+        </LinearLayout>
+
+
+            <!--            <ListView-->
+            <!--                android:id="@+id/listView1"-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="match_parent" />-->
+
+            <!--            <TextView-->
+            <!--                android:id="@+id/acknowledgement"-->
+            <!--                android:layout_width="fill_parent"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:textSize="20sp"-->
+            <!--                android:text="Contains Traffic Scotland Data"/>-->
+            <!--            <TextView-->
+            <!--                android:id="@+id/rawDataDisplay"-->
+            <!--                android:layout_width="fill_parent"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:textSize="20sp"-->
+            <!--                android:text="Raw Data is Displayed here"/>-->
+
+
+    </RelativeLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

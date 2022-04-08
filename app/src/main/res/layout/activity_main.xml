@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--Lockhart_Antony_S2040920-->
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -44,38 +45,39 @@
             android:orientation="horizontal"
             android:weightSum="2"
             android:layout_margin="5dp">
+
             <Button
                 android:id="@+id/incidentButton"
+                style="@style/Widget.AppCompat.Button.Borderless"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_margin="0dp"
-                android:background="@color/SteelBlue"
-                android:padding="15dp"
+                android:layout_weight="1"
+                android:background="@color/DodgerBlue"
                 android:drawableStart="@android:drawable/ic_menu_today"
-                android:shadowColor="@color/black"
+                android:padding="15dp"
+                android:shadowColor="@color/DarkGray"
+                android:shadowRadius="1.5"
                 android:shadowDx="1.2"
                 android:shadowDy="1.2"
-                android:shadowRadius="2.5"
-                android:text="Current incidents"
-                android:layout_weight="1"/>
+                android:text="Current incidents" />
 
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Current incidents on the road network e.g. accidents"
-                android:textAlignment="center"
                 android:layout_marginTop="0dp"
-                android:padding="10dp"
+                android:layout_weight="1"
                 android:autoLink="all"
-                android:textAppearance="?android:attr/textAppearanceListItemSecondary"
-                android:shadowColor="@color/black"
-                android:shadowRadius="1.5"
+                android:padding="10dp"
+                android:shadowColor="@color/DarkGray"
                 android:shadowDx="1.2"
                 android:shadowDy="1.2"
-                android:layout_weight="1"
-                >
+                android:shadowRadius="1.5"
+                android:text="Current incidents on the road network e.g. accidents"
+                android:textAlignment="center"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1">
 
 
             </TextView>
@@ -89,21 +91,22 @@
                 android:weightSum="2"
                 android:layout_margin="5dp">
 
-            <Button
-                android:id="@+id/plannedButton"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="0dp"
-                android:background="@color/RoyalBlue"
-                android:padding="15dp"
-                android:shadowColor="@color/black"
-                android:shadowDx="1.2"
-                android:shadowDy="1.2"
-                android:shadowRadius="2.5"
-                android:drawableStart="@android:drawable/ic_menu_today"
-                android:text="Planned roadworks"
-                android:layout_weight="1"/>
+                <Button
+                    android:id="@+id/plannedButton"
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="0dp"
+                    android:layout_weight="1"
+                    android:background="@color/RoyalBlue"
+                    android:drawableStart="@android:drawable/ic_menu_today"
+                    android:padding="15dp"
+                    android:shadowColor="@color/DarkGray"
+                    android:shadowRadius="1.5"
+                    android:shadowDx="1.2"
+                    android:shadowDy="1.2"
+                    android:text="Planned roadworks" />
 
             <TextView
                 android:layout_width="0dp"
@@ -113,8 +116,9 @@
                 android:layout_marginTop="0dp"
                 android:padding="10dp"
                 android:autoLink="all"
-                android:textAppearance="?android:attr/textAppearanceListItemSecondary"
-                android:shadowColor="@color/black"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                tools:ignore="Suspicious0dp">
+                android:shadowColor="@color/DarkGray"
                 android:shadowRadius="1.5"
                 android:shadowDx="1.2"
                 android:shadowDy="1.2"
@@ -133,22 +137,24 @@
     android:weightSum="2"
     android:layout_margin="5dp"
     android:layout_marginTop="10dp">
-            <Button
-                android:id="@+id/currentButton"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:layout_margin="0dp"
-                android:background="@color/CornflowerBlue"
-                android:drawableStart="@android:drawable/ic_menu_today"
-                android:padding="10dp"
-                android:radius="20dp"
-                android:shadowColor="@color/black"
-                android:shadowDx="1.2"
-                android:shadowDy="1.2"
-                android:shadowRadius="2.5"
-                android:layout_weight="1"
-                android:text="Current roadworks" />
+
+    <Button
+        android:id="@+id/currentButton"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_margin="0dp"
+        android:layout_weight="1"
+        android:background="@color/CornflowerBlue"
+        android:drawableStart="@android:drawable/ic_menu_today"
+        android:padding="10dp"
+        android:radius="20dp"
+        android:shadowColor="@color/DarkGray"
+        android:shadowRadius="1.5"
+        android:shadowDx="1.2"
+        android:shadowDy="1.2"
+        android:text="Current roadworks" />
 
             <TextView
                 android:layout_width="0dp"
@@ -158,8 +164,8 @@
                 android:layout_marginTop="0dp"
                 android:padding="10dp"
                 android:autoLink="all"
-                android:textAppearance="?android:attr/textAppearanceListItemSecondary"
-                android:shadowColor="@color/black"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1">
+                android:shadowColor="@color/DarkGray"
                 android:shadowRadius="1.5"
                 android:shadowDx="1.2"
                 android:shadowDy="1.2"
@@ -179,20 +185,22 @@
                 android:layout_margin="5dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp">
+
                 <Button
                     android:id="@+id/allButton"
+                    style="@style/Widget.AppCompat.Button.Borderless"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
                     android:layout_margin="0dp"
-                    android:background="@color/DarkSlateBlue"
+                    android:layout_weight="1"
+                    android:background="@color/DeepSkyBlue"
                     android:drawableStart="@android:drawable/ic_menu_today"
                     android:padding="10dp"
-                    android:shadowColor="@color/black"
+                    android:shadowColor="@color/DarkGray"
                     android:shadowDx="1.2"
                     android:shadowDy="1.2"
-                    android:shadowRadius="2.5"
-                    android:layout_weight="1"
+                    android:shadowRadius="1.5"
                     android:text="Load All Items" />
 
                 <TextView
@@ -203,8 +211,8 @@
                     android:layout_marginTop="0dp"
                     android:padding="25dp"
                     android:autoLink="all"
-                    android:textAppearance="?android:attr/textAppearanceListItemSecondary"
-                    android:shadowColor="@color/black"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1">
+                    android:shadowColor="@color/DarkGray"
                     android:shadowRadius="1.5"
                     android:shadowDx="1.2"
                     android:shadowDy="1.2"
@@ -241,6 +249,10 @@
                 android:id="@+id/imageView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:shadowColor="@color/DarkGray"
+                android:shadowRadius="1.5"
+                android:shadowDx="1.2"
+                android:shadowDy="1.2"
                 android:padding="20dp"
                 app:srcCompat="@drawable/logo_ts_blue" /></LinearLayout>
 

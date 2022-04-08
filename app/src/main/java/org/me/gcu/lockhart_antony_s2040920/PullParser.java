@@ -1,18 +1,16 @@
 package org.me.gcu.lockhart_antony_s2040920;
+//Lockhart_Antony_S2040920
 
 import android.util.Log;
 import android.util.Xml;
+
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
-
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
-import org.xmlpull.v1.XmlPullParserFactory;
-import org.me.gcu.lockhart_antony_s2040920.Item;
 
 
 public class PullParser {
@@ -20,7 +18,7 @@ public class PullParser {
 
 
 
-    public PullParser() throws XmlPullParserException {
+    public PullParser() {
     }
 
 
@@ -41,7 +39,7 @@ public class PullParser {
 
 
     private static ArrayList<Item> readFeed(XmlPullParser parser) throws XmlPullParserException, IOException {
-        ArrayList<Item> items = new ArrayList<Item>();
+        ArrayList<Item> items = new ArrayList<>();
         parser.require(XmlPullParser.START_TAG, ns, "rss");
         parser.nextTag();
         parser.require(XmlPullParser.START_TAG, ns, "channel");
@@ -121,7 +119,7 @@ public class PullParser {
                 }
             } while (parser.next() != XmlPullParser.END_TAG);
         }
-        return new Item(title, description, link, location, date, uuid);
+        return new Item(title, description, link, location, date);
     }
 
     // Processes title tags in the feed.

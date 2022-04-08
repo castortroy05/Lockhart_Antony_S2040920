@@ -1,4 +1,5 @@
 package org.me.gcu.lockhart_antony_s2040920;
+//Lockhart_Antony_S2040920
 
 
 import static org.me.gcu.lockhart_antony_s2040920.MainActivity.currentIncidents;
@@ -6,37 +7,54 @@ import static org.me.gcu.lockhart_antony_s2040920.MainActivity.currentroadworks;
 import static org.me.gcu.lockhart_antony_s2040920.MainActivity.plannedroadworks;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
+import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.icu.util.Calendar;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+
 import org.xmlpull.v1.XmlPullParserException;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-
+import java.text.MessageFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public class NetworkActions extends Activity {
+public class NetworkActions extends AppCompatActivity {
     public ArrayList<Item> loadedItems = new ArrayList<>();
     public ArrayList<Item> loadedAllItems = new ArrayList<>();
     HashMap<Item, List<Item>> itemsHashmap = new HashMap<>();
 
+    @SuppressLint({"ClickableViewAccessibility", "SetTextI18n"})
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,14 +64,52 @@ public class NetworkActions extends Activity {
         Intent intent = getIntent();
         String urlSource = intent.getStringExtra(MainActivity.EXTRA_FEED);
         Button searchButton = findViewById(R.id.searchButton);
-        EditText searchBox = findViewById(R.id.searchBox);
+        Button dateSearchButton = findViewById(R.id.dateSearchButton);
+        EditText dateSearchText = this.findViewById(R.id.dateSearchText);
+        dateSearchText.setInputType(InputType.TYPE_NULL);
+        dateSearchText.setOnTouchListener((v, event) -> {
+            DatePickerDialog picker;
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                final Calendar cldr = Calendar.getInstance();
+                int day = cldr.get(Calendar.DAY_OF_MONTH);
+                int month = cldr.get(Calendar.MONTH);
+                int year = cldr.get(Calendar.YEAR);
+                // date picker dialog
+                picker = new DatePickerDialog(NetworkActions.this,
+                        (view, year1, monthOfYear, dayOfMonth) -> dateSearchText.setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year1), year, month, day);
+                picker.show();
+            }
+            return false;
+        });
+
+
+
+        EditText searchBox = this.findViewById(R.id.searchBox);
         searchButton.setOnClickListener(
                 view -> {
                     Log.v("EditText", searchBox.getText().toString());
-                    search(searchBox.getText().toString());
+                    searchRoad(searchBox.getText().toString());
                 });
 
+        searchBox.setOnEditorActionListener((v, actionId, event) -> {
+            boolean result = false;
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                EditText searchBox1 = findViewById(R.id.searchBox);
+                searchBox1.setInputType(InputType.TYPE_CLASS_TEXT);
+                String searchText = searchBox1.getText().toString();
+                searchRoad(searchText);
+                result = true;
+            }
+            return result;
+        });
 
+
+
+        dateSearchButton.setOnClickListener(
+                view -> {
+                    Log.v("EditText", searchBox.getText().toString());
+                    searchDate(dateSearchText.getText().toString());
+                });
 
         new Thread(new Task(urlSource)).start();
 
@@ -62,10 +118,52 @@ public class NetworkActions extends Activity {
 
     }
 
+    @SuppressLint("SimpleDateFormat")
+    private void searchDate(String dateSearchText) {
+
+        Date dateShort;
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("EEEE, dd MMMM yyyy");
+        String dateLong = null;
+        try {
+            dateShort = new SimpleDateFormat("dd/MM/yyyy").parse(dateSearchText);
+            assert dateShort != null;
+            dateLong = sdf.format(dateShort);
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        String searchText = dateLong;
+                ArrayAdapter<Item> adapter;
+        ListView lv = findViewById(R.id.listView1);
+        //search for matching items in arraylist
+        List<Item> searchResults = null;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            searchResults = loadedItems.stream().filter(item -> {
+               Log.e ("Search Term", searchText);
+                assert searchText != null;
+                return item.description.toLowerCase().contains(searchText.toLowerCase());
+            }).collect(Collectors.toList());
+        }
+        adapter = new ItemAdapter(NetworkActions.this, R.layout.list_item, searchResults);
+
+        TextView itemCount = findViewById(R.id.itemCount);
+        //pass arraylist with generated id to map method
+//        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+//            Map<String, List<Item>> groupedItems = loadedItems.stream().collect(Collectors.groupingBy(Item::getUuid));
+//        }
+        itemCount.setText(MessageFormat.format("Displaying {0} items", Objects.requireNonNull(searchResults).size()));
+        lv.setAdapter(adapter);
+
+    }
+
     public void searchItems(View view) {
         EditText searchBox = findViewById(R.id.searchBox);
         String searchText = searchBox.getText().toString();
-        search(searchText);
+        searchRoad(searchText);
+        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(searchBox.getWindowToken(), 0);
+
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     }
 
     public void readAllFeeds(View view) {
@@ -97,7 +195,37 @@ public class NetworkActions extends Activity {
 
     }
 
+    public void searchDate(View view) {
+        EditText dateSearchText = findViewById(R.id.dateSearchText);
+        String searchText = dateSearchText.getText().toString();
+        searchDate(searchText);
+        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(dateSearchText.getWindowToken(), 0);
 
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public void getDate(View view) {
+        DatePickerDialog picker;
+        EditText dateSearchText = findViewById(R.id.dateSearchText);
+        final Calendar cldr = Calendar.getInstance();
+        int day = cldr.get(Calendar.DAY_OF_MONTH);
+        int month = cldr.get(Calendar.MONTH);
+        int year = cldr.get(Calendar.YEAR);
+        // date picker dialog
+        picker = new DatePickerDialog(NetworkActions.this,
+                (v, year1, monthOfYear, dayOfMonth) -> dateSearchText.setText(MessageFormat.format("{0}/{1}/{2}", dayOfMonth, monthOfYear + 1, year1)), year, month, day);
+        picker.show();
+    }
+
+    public void loadMap(View view) {
+        TextView location = findViewById(R.id.location);
+        String url = location.getText().toString();
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+        intent.setPackage("com.google.android.apps.maps");
+        startActivity(intent);
+    }
 
 
     private class Task implements Runnable
@@ -150,25 +278,12 @@ public class NetworkActions extends Activity {
         }
     }
 
-   //convert array list loadedItems to HashMap using uuid as key
-    //then use uuid as key to get list of items with that uuid
-       private Map<String, List<Item>> getMap(ArrayList<Item> loadedItems) {
-           if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-               return loadedItems.stream().collect(Collectors.groupingBy(Item::getUuid));
-           }
-           return getMap(loadedItems);
-           
-       }
-
-       //onclick function for search button
-       
-
 
    
 
     //get text from searchBox and search for matching items in arraylist
     @SuppressLint("SetTextI18n")
-    private void search(String searchText) {
+    private void searchRoad(String searchText) {
         ArrayAdapter<Item> adapter;
         ListView lv = findViewById(R.id.listView1);
         //search for matching items in arraylist
@@ -196,6 +311,7 @@ public class NetworkActions extends Activity {
             loadedItems.addAll(items);
             // Makes sure that the InputStream is closed after the app is
             // finished using it.
+            if(stream != null) stream.close();
         }
 
         return loadedItems;
@@ -211,13 +327,22 @@ public class NetworkActions extends Activity {
             loadedAllItems.addAll(items);
             // Makes sure that the InputStream is closed after the app is
             // finished using it.
-
+            if(stream != null) stream.close();
         }
 
+
+
         }
+        Map<Item, List<Item>> map = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+            map = loadedItems.stream().collect(Collectors.groupingBy(Item::getUuid));
+        }
+        Log.e("MyTag", "map: " + map);
+        itemsHashmap = (HashMap<Item, List<Item>>) map;
 
         
         return loadedAllItems;
+
     }
 
 

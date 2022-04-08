@@ -1,11 +1,28 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.Lockhart_Antony_S2040920" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="Theme.Lockhart_Antony_S2040920" parent="Theme.AppCompat.DayNight.DarkActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/CornflowerBlue</item>
+        <item name="colorPrimary">@color/MediumPurple</item>
         <item name="colorPrimaryDark">@color/DarkBlue</item>
         <item name="colorAccent">@color/LightSkyBlue</item>
-        <!-- Customize your theme here. -->
+        <item name="colorError">@color/PaleVioletRed</item>
+<!--        <item name="colorOnError">@color/AntiqueWhite</item>-->
+<!--        <item name="colorSurface">@color/WhiteSmoke</item>-->
+<!--        <item name="colorOnSurface">@color/DarkSlateGray</item>-->
+<!--        <item name="android:colorBackground">@color/WhiteSmoke</item>-->
+<!--        <item name="colorOnBackground">@color/DarkSlateGray</item>-->
+<!--        &lt;!&ndash; Secondary brand color. &ndash;&gt;-->
+<!--        <item name="colorSecondary">@color/LightBlue</item>-->
+<!--        <item name="colorSecondaryVariant">@color/LightBlue</item>-->
+<!--        <item name="colorOnSecondary">@color/black</item>-->
+<!--         Status bar color.-->
+<!--        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>-->
+         Customize your theme here.
+
+
+
+
+
     </style>
 
 

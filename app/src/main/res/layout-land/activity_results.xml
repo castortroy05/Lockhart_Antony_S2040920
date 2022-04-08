@@ -15,21 +15,20 @@
 
         <Button
             android:id="@+id/incidentButton"
-            style="@android:style/Widget.Material.Light.Button.Borderless"
+            style="@android:style/Widget.Material.Light.Button.Small"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_margin="0dp"
             android:layout_weight="1"
             android:background="@color/DodgerBlue"
-            android:capitalize="characters"
             android:onClick="readIncidents"
             android:shadowColor="@color/DarkGray"
             android:shadowDx="1.2"
             android:shadowDy="1.2"
             android:shadowRadius="2.5"
             android:text="Current incidents"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textAppearance="@style/TextAppearance.AppCompat.Button"
             tools:ignore="ButtonStyle,HardcodedText" />
 
 
@@ -44,12 +43,12 @@
             android:background="@color/RoyalBlue"
             android:onClick="readPlanned"
             android:shadowColor="@color/DarkGray"
+            android:shadowRadius="1.5"
             android:shadowDx="1.2"
             android:shadowDy="1.2"
-            android:shadowRadius="1.5"
             android:text="Planned roadworks"
 
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textAppearance="@style/TextAppearance.AppCompat.Button"
             tools:ignore="ButtonStyle,HardcodedText" />
 
         <Button
@@ -63,11 +62,11 @@
             android:background="@color/CornflowerBlue"
             android:onClick="readCurrent"
             android:shadowColor="@color/DarkGray"
+            android:shadowRadius="1.5"
             android:shadowDx="1.2"
             android:shadowDy="1.2"
-            android:shadowRadius="1.5"
             android:text="Current roadworks"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textAppearance="@style/TextAppearance.AppCompat.Button"
             tools:ignore="ButtonStyle,HardcodedText" />
 
         <Button
@@ -85,20 +84,23 @@
             android:shadowDy="1.2"
             android:shadowRadius="1.5"
             android:text="Load All"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textAppearance="@style/TextAppearance.AppCompat.Button"
             tools:ignore="ButtonStyle,HardcodedText" />
 
 
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:id="@+id/searching"
+        android:layout_width="343dp"
+        android:layout_height="63dp"
+        android:layout_above="@id/listContainer"
         android:layout_below="@id/buttonPanel"
+        android:layout_alignParentEnd="true"
+        android:layout_toRightOf="@id/dateSearch"
         android:orientation="horizontal"
         android:weightSum="2"
-        >
+        tools:ignore="RtlHardcoded">
 
         <EditText
             android:id="@+id/searchBox"
@@ -115,15 +117,15 @@
             android:minHeight="48dp"
             android:padding="10dp"
             android:shadowColor="@color/DarkGray"
-            android:shadowRadius="1.5"
             android:shadowDx="1.2"
             android:shadowDy="1.2"
+            android:shadowRadius="1.5"
             android:textAlignment="center"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            tools:ignore="HardcodedText,TextFields" />
+            tools:ignore="TextFields" />
 
 
-<!-- create a search button -->
+        <!-- create a search button -->
         <Button
             android:id="@+id/searchButton"
             style="@style/Widget.AppCompat.Button.Small"
@@ -133,49 +135,47 @@
             android:onClick="searchItems"
             android:padding="10dp"
             android:shadowColor="@color/DarkGray"
-            android:shadowRadius="1.5"
             android:shadowDx="1.2"
             android:shadowDy="1.2"
-            android:textAlignment="center"
+            android:shadowRadius="1.5"
             android:text="Search"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Button"
             tools:ignore="HardcodedText" />
 
 
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:id="@+id/dateSearch"
-        android:layout_below="@id/searching"
+        android:layout_width="342dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/buttonPanel"
         android:orientation="horizontal"
-        android:weightSum="2"
-        >
+        android:weightSum="2">
 
         <EditText
             android:id="@+id/dateSearchText"
             android:layout_width="0dp"
-            android:onClick="getDate"
-            android:clickable="true"
-            android:focusable="false"
-            android:focusableInTouchMode="false"
             android:layout_height="wrap_content"
             android:layout_weight="1.5"
-            android:inputType="datetime"
+            android:clickable="true"
+            android:ems="10"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
             android:gravity="center"
             android:hint="Enter Date to search"
-            android:ems="10"
+            android:inputType="datetime"
             android:minHeight="48dp"
+            android:onClick="getDate"
             android:padding="10dp"
             android:shadowColor="@color/DarkGray"
-            android:shadowRadius="1.5"
             android:shadowDx="1.2"
             android:shadowDy="1.2"
+            android:shadowRadius="1.5"
             android:textAlignment="center"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            tools:ignore="HardcodedText,KeyboardInaccessibleWidget"
-            android:importantForAutofill="no" />
+            tools:ignore="HardcodedText,KeyboardInaccessibleWidget" />
 
 
         <!-- create a search button -->
@@ -188,12 +188,12 @@
             android:onClick="searchDate"
             android:padding="10dp"
             android:shadowColor="@color/DarkGray"
-            android:shadowRadius="1.5"
             android:shadowDx="1.2"
             android:shadowDy="1.2"
-            android:textAlignment="center"
+            android:shadowRadius="1.5"
             android:text="Search"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Button"
             tools:ignore="HardcodedText" />
 
 
