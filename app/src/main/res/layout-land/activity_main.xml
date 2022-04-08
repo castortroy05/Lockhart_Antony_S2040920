@@ -64,7 +64,8 @@
                 android:shadowDx="1.2"
                 android:shadowDy="1.2"
                 android:shadowRadius="1.5"
-                android:text="Current incidents" />
+                android:text="Current incidents"
+                tools:ignore="HardcodedText" />
 
 
             <TextView
@@ -80,7 +81,8 @@
                 android:shadowRadius="1.5"
                 android:text="Current incidents on the road network e.g. accidents"
                 android:textAlignment="center"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1">
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                tools:ignore="HardcodedText">
 
 
             </TextView>
@@ -113,7 +115,8 @@
                 android:shadowDx="1.2"
                 android:shadowDy="1.2"
                 android:shadowRadius="1.5"
-                android:text="Planned roadworks" />
+                android:text="Planned roadworks"
+                tools:ignore="HardcodedText" />
 
             <TextView
                 android:layout_width="0dp"
@@ -128,7 +131,8 @@
                 android:shadowRadius="1.5"
                 android:text="Future roadworks on the road network"
                 android:textAlignment="center"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1">
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                tools:ignore="HardcodedText">
 
 
             </TextView>
@@ -162,7 +166,8 @@
                 android:shadowDx="1.2"
                 android:shadowDy="1.2"
                 android:shadowRadius="1.5"
-                android:text="Current roadworks" />
+                android:text="Current roadworks"
+                tools:ignore="HardcodedText" />
 
             <TextView
                 android:layout_width="0dp"
@@ -177,7 +182,8 @@
                 android:shadowRadius="1.5"
                 android:text="Roadworks currently being undertaken on the road network"
                 android:textAlignment="center"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1">
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                tools:ignore="HardcodedText">
 
 
             </TextView>
@@ -210,7 +216,8 @@
                 android:shadowDx="1.2"
                 android:shadowDy="1.2"
                 android:shadowRadius="1.5"
-                android:text="Load All Items" />
+                android:text="Load All Items"
+                tools:ignore="HardcodedText" />
 
             <TextView
                 android:layout_width="0dp"
@@ -225,7 +232,8 @@
                 android:shadowRadius="1.5"
                 android:text="Show all items"
                 android:textAlignment="center"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1">
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                tools:ignore="HardcodedText">
 
 
             </TextView>

@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!-- Base application theme. -->
     <style name="Theme.Lockhart_Antony_S2040920" parent="Theme.AppCompat.DayNight.DarkActionBar">
         <!-- Primary brand color. -->

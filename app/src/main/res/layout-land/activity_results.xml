@@ -122,7 +122,7 @@
             android:shadowRadius="1.5"
             android:textAlignment="center"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            tools:ignore="TextFields" />
+            tools:ignore="HardcodedText,TextFields" />
 
 
         <!-- create a search button -->
@@ -175,7 +175,8 @@
             android:shadowRadius="1.5"
             android:textAlignment="center"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            tools:ignore="HardcodedText,KeyboardInaccessibleWidget" />
+            tools:ignore="HardcodedText,KeyboardInaccessibleWidget"
+            android:importantForAutofill="no" />
 
 
         <!-- create a search button -->

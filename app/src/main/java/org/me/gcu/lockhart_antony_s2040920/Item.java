@@ -2,7 +2,6 @@ package org.me.gcu.lockhart_antony_s2040920;
 //Lockhart_Antony_S2040920
 
 import java.util.Date;
-import java.util.UUID;
 
 public class Item {
     public Item(String title, String link, String description, String location, String date, String author, String comments, String pubDate, Date endDate) {
@@ -29,11 +28,12 @@ public class Item {
         this.link = link;
         this.location = location;
         this.date = date;
-        Object uuid = UUID.randomUUID().hashCode();
+//        Object uuid = UUID.randomUUID().hashCode();
     }
 
     public static <K, T> K getUuid(T t) {
-        return (K) t;
+        final K t1 = (K) t;
+        return t1;
     }
 
 

@@ -22,7 +22,6 @@
             android:layout_margin="0dp"
             android:layout_weight="1"
             android:background="@color/DodgerBlue"
-            android:capitalize="characters"
             android:onClick="readIncidents"
             android:shadowColor="@color/DarkGray"
             android:shadowDx="1.2"

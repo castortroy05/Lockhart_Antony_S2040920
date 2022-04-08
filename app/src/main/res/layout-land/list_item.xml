@@ -55,7 +55,8 @@
                 android:shadowRadius="1.5"
                 android:text="Description: "
                 android:textAlignment="textStart"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
+                android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                tools:ignore="HardcodedText" />
 
             <TextView
                 android:id="@+id/description"
@@ -82,7 +83,8 @@
             android:layout_gravity="start"
             android:layout_marginEnd="0dp"
             android:layout_toStartOf="@+id/startDateInfo"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            tools:ignore="RtlHardcoded">
 
             <TextView
                 android:id="@+id/delayInfoLabel"
@@ -97,7 +99,8 @@
                 android:shadowRadius="1.5"
                 android:text="Delay Information: "
                 android:textAlignment="inherit"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
+                android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                tools:ignore="HardcodedText" />
 
             <TextView
                 android:id="@+id/txtDelayInfo"
@@ -125,7 +128,8 @@
             android:layout_centerInParent="true"
             android:layout_gravity="start"
             android:orientation="horizontal"
-            android:weightSum="1">
+            android:weightSum="1"
+            tools:ignore="RtlHardcoded">
 
             <TextView
                 android:id="@+id/startDateLabel"
@@ -141,7 +145,8 @@
                 android:shadowRadius="1.5"
                 android:text="Start Date: "
                 android:textAlignment="textStart"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
+                android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                tools:ignore="HardcodedText" />
 
             <TextView
                 android:id="@+id/txtStartDate"
@@ -185,7 +190,8 @@
                 android:shadowRadius="1.5"
                 android:text="End Date: "
                 android:textAlignment="textStart"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
+                android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                tools:ignore="HardcodedText" />
 
             <TextView
                 android:id="@+id/txtEndDate"
@@ -266,7 +272,8 @@
             android:shadowRadius="1.5"
             android:text="Load Map"
             android:textAlignment="center"
-            android:textAppearance="@style/TextAppearance.AppCompat.Button" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Button"
+            tools:ignore="HardcodedText" />
 
 
     </LinearLayout>
