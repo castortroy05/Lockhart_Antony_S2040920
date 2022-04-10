@@ -136,25 +136,19 @@ public class NetworkActions extends AppCompatActivity {
                 ArrayAdapter<Item> adapter;
         ListView lv = findViewById(R.id.listView1);
         //search for matching items in arraylist
-        List<Item> searchResults = null;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            searchResults = loadedItems.stream().filter(item -> {
-               Log.e ("Search Term", searchText);
-                assert searchText != null;
-                return item.description.toLowerCase().contains(searchText.toLowerCase());
-            }).collect(Collectors.toList());
-        }
+        List<Item> searchResults = new ArrayList<>();
+        for (Item item : loadedItems) {
+
+            if (item.description !=null && (item.title.equalsIgnoreCase(searchText) || item.description.contains(searchText))) {
+                searchResults.add(item);
+            }
         adapter = new ItemAdapter(NetworkActions.this, R.layout.list_item, searchResults);
 
         TextView itemCount = findViewById(R.id.itemCount);
-        //pass arraylist with generated id to map method
-//        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-//            Map<String, List<Item>> groupedItems = loadedItems.stream().collect(Collectors.groupingBy(Item::getUuid));
-//        }
         itemCount.setText(MessageFormat.format("Displaying {0} items", Objects.requireNonNull(searchResults).size()));
         lv.setAdapter(adapter);
 
-    }
+    }}
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void searchItems(View view) {

@@ -5,6 +5,10 @@ plugins {
 }
 
 android {
+    signingConfigs {
+        'default' {
+        }
+    }
     compileSdk 31
     buildToolsVersion "30.0.3"
 

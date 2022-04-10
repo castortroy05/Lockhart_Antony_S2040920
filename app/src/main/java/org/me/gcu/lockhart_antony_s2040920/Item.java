@@ -36,52 +36,7 @@ public class Item {
     }
 
 
-//    public void setDescription(String description)  {
-//
-//        if(description.contains("<br />")){
-//
-//        String[] info = description.split("<br />");
-//
-//        //Log.e("FULLINFO", description.toString());
-//
-//        String endDateStr = "";
-//        String startDateStr;
-//
-//        startDateStr = info[0];
-//
-//        if(info.length > 1)
-//            endDateStr = info[1];
-//
-//        if(info.length>2){
-//
-//            String[] di = info[2].split(": ");
-//
-//            String delayInformation = "";
-//            if(di.length>1)
-//                delayInformation = di[1];
-//        }
-//
-//        startDateStr = startDateStr.substring(12);
-//        startDateStr.trim();
-//        //startDateStr = startDateStr.
-//        endDateStr = endDateStr.substring(10);
-//        Date startDate = null;
-//        Date endDate = null;
-//
-//        try {
-//            startDate = new SimpleDateFormat("EE, dd MMMM yyyy - kk:mm").parse(startDateStr);
-//            endDate = new SimpleDateFormat("EE, dd MMMM yyyy - kk:mm").parse(endDateStr);
-//        } catch (ParseException e) {
-//            // TODO Auto-generated catch block
-//            e.printStackTrace();
-//        }
-//
-//
-//            Date startDate1 = startDate;
-//        this.endDate = endDate;
-//        }
-//        this.description = description;
-//    }
+
     }
 
 
