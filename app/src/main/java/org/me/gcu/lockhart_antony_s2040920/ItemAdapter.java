@@ -3,7 +3,6 @@ package org.me.gcu.lockhart_antony_s2040920;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,6 +51,9 @@ public class ItemAdapter extends ArrayAdapter<Item> {
         TextView startDateLabel = convertView.findViewById(R.id.startDateLabel);
         TextView endDateLabel = convertView.findViewById(R.id.endDateLabel);
         TextView descriptionLabel = convertView.findViewById(R.id.descriptionLabel);
+        TextView delayDuration = convertView.findViewById(R.id.delayDuration);
+        TextView delayDurationLabel = convertView.findViewById(R.id.delayDurationLabel);
+
 
         txtDelayInfo.setVisibility(View.VISIBLE);
         delayInfoLabel.setVisibility(View.VISIBLE);
@@ -61,6 +63,8 @@ public class ItemAdapter extends ArrayAdapter<Item> {
         endDateLabel.setVisibility(View.VISIBLE);
         itemDescription.setVisibility(View.VISIBLE);
         descriptionLabel.setVisibility(View.VISIBLE);
+        delayDuration.setVisibility(View.VISIBLE);
+        delayDurationLabel.setVisibility(View.VISIBLE);
 
 
 
@@ -88,8 +92,32 @@ public class ItemAdapter extends ArrayAdapter<Item> {
 
             Date startDate1 = startDate;
             Date endDate1 = endDate;
+            long difference = 0;
+            if (endDate1 != null) {
+                difference = Math.abs(startDate1.getTime() - endDate1.getTime());
+            }
+            long differenceDates = difference / (24 * 60 * 60 * 1000);
+            String dayDifference = Long.toString(differenceDates);
+            if(differenceDates > 7 )
+            {
+                delayDuration.setTextColor(getContext().getResources().getColor(R.color.Orange));
+                delayDurationLabel.setTextColor(getContext().getResources().getColor(R.color.Orange));
+            }
+            if(differenceDates > 30)
+            {
+                delayDuration.setTextColor(getContext().getResources().getColor(R.color.Red));
+                delayDurationLabel.setTextColor(getContext().getResources().getColor(R.color.Red));
+            }
+           if(differenceDates < 7)
+            {
+                delayDuration.setTextColor(getContext().getResources().getColor(R.color.GreenYellow));
+                delayDurationLabel.setTextColor(getContext().getResources().getColor(R.color.GreenYellow));
+            }
+
+            delayDuration.setText(dayDifference);
+
             delayInfoLabel.setVisibility(View.VISIBLE);
-            Log.e("Crash", info[1]);
+//            Log.e("Crash", info[1]);
             if(info[2] != null){
             txtDelayInfo.setText(info[2]);
             if(info[2].contains("Delay Information")){delayInfoLabel.setVisibility(View.GONE);}}
@@ -136,6 +164,8 @@ else {
             else{            itemName.setText(item.title.toUpperCase());}
             itemName.setBackgroundResource(R.color.DodgerBlue);
             itemDescription.setText(item.description);
+            delayDurationLabel.setVisibility(View.GONE);
+            delayDuration.setVisibility(View.GONE);
             itemLink.setText(item.link);
             itemLink.setVisibility(View.GONE);
             itemLocation.setVisibility(View.GONE);

@@ -8,8 +8,11 @@ import static org.me.gcu.lockhart_antony_s2040920.MainActivity.plannedroadworks;
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.icu.util.Calendar;
+import android.net.ConnectivityManager;
+import android.net.NetworkCapabilities;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -26,8 +29,10 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import org.xmlpull.v1.XmlPullParserException;
@@ -59,6 +64,10 @@ public class NetworkActions extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_results);
+
+        checkConnection();
+
+
 
 
         Intent intent = getIntent();
@@ -166,6 +175,7 @@ public class NetworkActions extends AppCompatActivity {
     }
 
     private void loadList(String list) {
+        checkConnection();
         if(loadedItems.isEmpty()) {
             new Thread(new Task(list)).start();
         }
@@ -190,7 +200,26 @@ public class NetworkActions extends AppCompatActivity {
 
     }
 
-    public void searchDate(View view) {
+    public void checkConnection() {
+        if (!isNetworkAvailable()) {
+            new AlertDialog.Builder(this)
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .setTitle("Internet Connection Alert")
+                    .setMessage("Please Check Your Internet Connection")
+                    .setPositiveButton("Close", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            finish();
+                        }
+                    }).show();
+
+        } else if (isNetworkAvailable()) {
+            Toast.makeText(NetworkActions.this,
+                    "Loading", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+        public void searchDate(View view) {
         EditText dateSearchText = findViewById(R.id.dateSearchText);
         String searchText = dateSearchText.getText().toString();
         searchDate(searchText);
@@ -360,4 +389,31 @@ public class NetworkActions extends AppCompatActivity {
         return conn.getInputStream();
     }
 
-}
+
+
+    public boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        if (connectivityManager != null) {
+
+
+            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                NetworkCapabilities capabilities = connectivityManager.getNetworkCapabilities(connectivityManager.getActiveNetwork());
+                if (capabilities != null) {
+                    if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) {
+
+                        return true;
+                    } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
+
+                        return true;
+                    } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)) {
+
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+    }
