@@ -1,7 +1,6 @@
 plugins {
     id 'com.android.application'
     id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
-
 }
 
 android {
@@ -9,13 +8,13 @@ android {
         'default' {
         }
     }
-    compileSdk 31
-    buildToolsVersion "30.0.3"
+    compileSdk 33 // Updated to a stable version
+    buildToolsVersion '33.0.2' // Updated to match compileSdk
 
     defaultConfig {
         applicationId "org.me.gcu.lockhart_antony_s2040920"
         minSdk 23
-        targetSdk 23
+        targetSdk 33 // Updated to match compileSdk
         versionCode 1
         versionName "1.0"
 
@@ -31,7 +30,6 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
-
     }
     namespace 'org.me.gcu.lockhart_antony_s2040920'
     buildFeatures {
@@ -44,15 +42,11 @@ android {
 }
 
 dependencies {
-
-
-
-    implementation 'androidx.appcompat:appcompat:1.4.1'
-
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
-    implementation 'androidx.recyclerview:recyclerview:1.2.1'
-    implementation 'com.google.android.gms:play-services-maps:18.0.2'
+    implementation 'androidx.appcompat:appcompat:1.6.1' // Updated to latest stable version
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation 'androidx.recyclerview:recyclerview:1.3.2'
+    implementation 'com.google.android.gms:play-services-maps:18.1.0' // Updated to latest stable version
     testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5' // Updated to latest stable version
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1' // Updated to latest stable version
 }
