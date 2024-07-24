@@ -14,57 +14,104 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Parser for DATEX II XML data.
  */
 public class DatexParser {
-    private static final String ns = null;
+    private static final String NS = null;
+    private static final String TAG_SITUATION = "situation";
+    private static final String TAG_SITUATION_RECORD = "situationRecord";
+    private static final String TAG_PUBLICATION_TIME = "publicationTime";
+    public static final String D_2_LOGICAL_MODEL = "d2LogicalModel";
+    public static final String SITE_MEASUREMENTS = "siteMeasurements";
 
-    /**
-     * Parses the input stream containing DATEX II XML data.
-     *
-     * @param in The input stream to parse.
-     * @return A list of Item objects parsed from the XML.
-     * @throws XmlPullParserException If there's an error parsing the XML.
-     * @throws IOException If there's an error reading the input stream.
-     */
-    public static List<Item> parse(InputStream in) throws XmlPullParserException, IOException {
-        try {
+
+    public static List<CurrentRoadwork> parseCurrentRoadworks(InputStream in) throws XmlPullParserException, IOException {
+        return parseRoadworks(in, true);
+    }
+
+    public static List<FutureRoadwork> parseFutureRoadworks(InputStream in) throws XmlPullParserException, IOException {
+        return parseRoadworks(in, false);
+    }
+
+    public static List<UnplannedEvent> parseUnplannedEvents(InputStream in) throws XmlPullParserException, IOException {
+        try (in) {
             XmlPullParser parser = Xml.newPullParser();
             parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
             parser.setInput(in, null);
             parser.nextTag();
-            return readFeed(parser);
-        } finally {
-            in.close();
+            return readUnplannedEvents(parser);
         }
     }
 
-    private static List<Item> readFeed(XmlPullParser parser) throws XmlPullParserException, IOException {
-        List<Item> items = new ArrayList<>();
+    public static List<TrafficStatusMeasurement> parseTrafficStatus(InputStream in) throws XmlPullParserException, IOException {
+        try (in) {
+            XmlPullParser parser = Xml.newPullParser();
+            parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
+            parser.setInput(in, null);
+            parser.nextTag();
+            return readTrafficStatus(parser);
+        }
+    }
 
-        parser.require(XmlPullParser.START_TAG, ns, "d2LogicalModel");
+    public static List<TravelTimeMeasurement> parseTravelTime(InputStream in) throws XmlPullParserException, IOException {
+        try (in) {
+            XmlPullParser parser = Xml.newPullParser();
+            parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
+            parser.setInput(in, null);
+            parser.nextTag();
+            return readTravelTime(parser);
+        }
+    }
+
+    public static List<VMSUnit> parseVMS(InputStream in) throws XmlPullParserException, IOException {
+        try (in) {
+            XmlPullParser parser = Xml.newPullParser();
+            parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
+            parser.setInput(in, null);
+            parser.nextTag();
+            return readVMS(parser);
+        }
+    }
+
+    private static <T extends Roadwork> List<T> parseRoadworks(InputStream in, boolean isCurrent) throws XmlPullParserException, IOException {
+        try (in) {
+            XmlPullParser parser = Xml.newPullParser();
+            parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
+            parser.setInput(in, null);
+            parser.nextTag();
+            return readRoadworks(parser, isCurrent);
+        }
+    }
+
+    private static <T extends Roadwork> List<T> readRoadworks(XmlPullParser parser, boolean isCurrent) throws XmlPullParserException, IOException {
+        List<T> roadworks = new ArrayList<>();
+
+        parser.require(XmlPullParser.START_TAG, NS, D_2_LOGICAL_MODEL);
         while (parser.next() != XmlPullParser.END_DOCUMENT) {
             if (parser.getEventType() != XmlPullParser.START_TAG) {
                 continue;
             }
             String name = parser.getName();
-            if (name.equals("situation")) {
-                items.add(readSituation(parser));
+            if (name.equals(TAG_SITUATION)) {
+                roadworks.add(readRoadwork(parser, isCurrent));
             } else {
                 skip(parser);
             }
         }
-        return items;
+        return roadworks;
     }
 
-    private static Item readSituation(XmlPullParser parser) throws XmlPullParserException, IOException {
-        parser.require(XmlPullParser.START_TAG, ns, "situation");
-        final String[] title = {null};
-        final String[] description = {null};
-        final String[] location = {null};
-        String pubDate = null;
+    private static <T extends Roadwork> T readRoadwork(XmlPullParser parser, boolean isCurrent) throws XmlPullParserException, IOException {
+        parser.require(XmlPullParser.START_TAG, NS, TAG_SITUATION);
+        AtomicReference<String> id = new AtomicReference<>();
+        String publicationTime = null;
+        String description = null;
+        String location = null;
+        String startDate = null;
+        String endDate = null;
 
         while (parser.next() != XmlPullParser.END_TAG) {
             if (parser.getEventType() != XmlPullParser.START_TAG) {
@@ -72,15 +119,17 @@ public class DatexParser {
             }
             String name = parser.getName();
             switch (name) {
-                case "situationRecord":
+                case TAG_SITUATION_RECORD:
                     readSituationRecord(parser, item -> {
-                        title[0] = item.title;
-                        description[0] = item.description;
-                        location[0] = item.location;
+                        id.set(item.getId());
+                        description = item.getDescription();
+                        location = item.getLocation();
+                        startDate = item.getStartDate().toString();
+                        endDate = item.getEndDate().toString();
                     });
                     break;
-                case "publicationTime":
-                    pubDate = readPublicationTime(parser);
+                case TAG_PUBLICATION_TIME:
+                    publicationTime = readPublicationTime(parser);
                     break;
                 default:
                     skip(parser);
@@ -88,12 +137,35 @@ public class DatexParser {
             }
         }
 
-        return new Item(title[0], null, description[0], location[0], pubDate);
+        if (isCurrent) {
+            return (T) new CurrentRoadwork(id.get(), publicationTime, description, location, startDate, endDate);
+        } else {
+            return (T) new FutureRoadwork(id.get(), publicationTime, description, location, startDate, endDate);
+        }
     }
 
-    private static void readSituationRecord(XmlPullParser parser, ItemCallback callback) throws XmlPullParserException, IOException {
-        parser.require(XmlPullParser.START_TAG, ns, "situationRecord");
-        String title = null;
+    private static List<UnplannedEvent> readUnplannedEvents(XmlPullParser parser) throws XmlPullParserException, IOException {
+        List<UnplannedEvent> events = new ArrayList<>();
+
+        parser.require(XmlPullParser.START_TAG, NS, D_2_LOGICAL_MODEL);
+        while (parser.next() != XmlPullParser.END_DOCUMENT) {
+            if (parser.getEventType() != XmlPullParser.START_TAG) {
+                continue;
+            }
+            String name = parser.getName();
+            if (name.equals(TAG_SITUATION)) {
+                events.add(readUnplannedEvent(parser));
+            } else {
+                skip(parser);
+            }
+        }
+        return events;
+    }
+
+    private static UnplannedEvent readUnplannedEvent(XmlPullParser parser) throws XmlPullParserException, IOException {
+        parser.require(XmlPullParser.START_TAG, NS, TAG_SITUATION);
+        String id = null;
+        String publicationTime = null;
         String description = null;
         String location = null;
 
@@ -103,14 +175,15 @@ public class DatexParser {
             }
             String name = parser.getName();
             switch (name) {
-                case "situationRecordType":
-                    title = readText(parser);
+                case TAG_SITUATION_RECORD:
+                    readSituationRecord(parser, item -> {
+                        id = item.getId();
+                        description = item.getDescription();
+                        location = item.getLocation();
+                    });
                     break;
-                case "comment":
-                    description = readComment(parser);
-                    break;
-                case "groupOfLocations":
-                    location = readGroupOfLocations(parser);
+                case TAG_PUBLICATION_TIME:
+                    publicationTime = readPublicationTime(parser);
                     break;
                 default:
                     skip(parser);
@@ -118,18 +191,251 @@ public class DatexParser {
             }
         }
 
-        callback.onItemParsed(new Item(title, null, description, location, null));
+        return new UnplannedEvent(id, publicationTime, description, location);
+    }
+
+    private static List<TrafficStatusMeasurement> readTrafficStatus(XmlPullParser parser) throws XmlPullParserException, IOException {
+        List<TrafficStatusMeasurement> measurements = new ArrayList<>();
+
+        parser.require(XmlPullParser.START_TAG, NS, D_2_LOGICAL_MODEL);
+        while (parser.next() != XmlPullParser.END_DOCUMENT) {
+            if (parser.getEventType() != XmlPullParser.START_TAG) {
+                continue;
+            }
+            String name = parser.getName();
+            if (name.equals(SITE_MEASUREMENTS)) {
+                measurements.add(readTrafficStatusMeasurement(parser));
+            } else {
+                skip(parser);
+            }
+        }
+        return measurements;
+    }
+
+    private static TrafficStatusMeasurement readTrafficStatusMeasurement(XmlPullParser parser) throws XmlPullParserException, IOException {
+        parser.require(XmlPullParser.START_TAG, NS, SITE_MEASUREMENTS);
+        String id = null;
+        String publicationTime = null;
+        String siteReference = null;
+        String measurementTime = null;
+        String trafficStatus = null;
+
+        while (parser.next() != XmlPullParser.END_TAG) {
+            if (parser.getEventType() != XmlPullParser.START_TAG) {
+                continue;
+            }
+            String name = parser.getName();
+            switch (name) {
+                case "measurementSiteReference":
+                    siteReference = readText(parser);
+                    break;
+                case "measurementTimeDefault":
+                    measurementTime = readText(parser);
+                    break;
+                case "trafficStatus":
+                    trafficStatus = readText(parser);
+                    break;
+                default:
+                    skip(parser);
+                    break;
+            }
+        }
+
+        id = siteReference + "_" + measurementTime;
+        publicationTime = measurementTime;
+
+        return new TrafficStatusMeasurement(id, publicationTime, siteReference, measurementTime, trafficStatus);
+    }
+
+    private static List<TravelTimeMeasurement> readTravelTime(XmlPullParser parser) throws XmlPullParserException, IOException {
+        List<TravelTimeMeasurement> measurements = new ArrayList<>();
+
+        parser.require(XmlPullParser.START_TAG, NS, D_2_LOGICAL_MODEL);
+        while (parser.next() != XmlPullParser.END_DOCUMENT) {
+            if (parser.getEventType() != XmlPullParser.START_TAG) {
+                continue;
+            }
+            String name = parser.getName();
+            if (name.equals(SITE_MEASUREMENTS)) {
+                measurements.add(readTravelTimeMeasurement(parser));
+            } else {
+                skip(parser);
+            }
+        }
+        return measurements;
+    }
+
+    private static TravelTimeMeasurement readTravelTimeMeasurement(XmlPullParser parser) throws XmlPullParserException, IOException {
+        parser.require(XmlPullParser.START_TAG, NS, SITE_MEASUREMENTS);
+        String id = null;
+        String publicationTime = null;
+        String siteReference = null;
+        String measurementTime = null;
+        double travelTime = 0;
+        double freeFlowTravelTime = 0;
+
+        while (parser.next() != XmlPullParser.END_TAG) {
+            if (parser.getEventType() != XmlPullParser.START_TAG) {
+                continue;
+            }
+            String name = parser.getName();
+            switch (name) {
+                case "measurementSiteReference":
+                    siteReference = readText(parser);
+                    break;
+                case "measurementTimeDefault":
+                    measurementTime = readText(parser);
+                    break;
+                case "travelTime":
+                    travelTime = Double.parseDouble(readText(parser));
+                    break;
+                case "freeFlowTravelTime":
+                    freeFlowTravelTime = Double.parseDouble(readText(parser));
+                    break;
+                default:
+                    skip(parser);
+                    break;
+            }
+        }
+
+        id = siteReference + "_" + measurementTime;
+        publicationTime = measurementTime;
+
+        return new TravelTimeMeasurement(id, publicationTime, siteReference, measurementTime, travelTime, freeFlowTravelTime);
+    }
+
+    private static List<VMSUnit> readVMS(XmlPullParser parser) throws XmlPullParserException, IOException {
+        List<VMSUnit> vmsUnits = new ArrayList<>();
+
+        parser.require(XmlPullParser.START_TAG, NS, D_2_LOGICAL_MODEL);
+        while (parser.next() != XmlPullParser.END_DOCUMENT) {
+            if (parser.getEventType() != XmlPullParser.START_TAG) {
+                continue;
+            }
+            String name = parser.getName();
+            if (name.equals("vmsUnit")) {
+                vmsUnits.add(readVMSUnit(parser));
+            } else {
+                skip(parser);
+            }
+        }
+        return vmsUnits;
+    }
+
+    private static VMSUnit readVMSUnit(XmlPullParser parser) throws XmlPullParserException, IOException {
+        parser.require(XmlPullParser.START_TAG, NS, "vmsUnit");
+        String id = null;
+        String publicationTime = null;
+        String vmsUnitReference = null;
+        List<VMSMessage> messages = new ArrayList<>();
+
+        while (parser.next() != XmlPullParser.END_TAG) {
+            if (parser.getEventType() != XmlPullParser.START_TAG) {
+                continue;
+            }
+            String name = parser.getName();
+            switch (name) {
+                case "vmsUnitReference":
+                    vmsUnitReference = readText(parser);
+                    break;
+                case "vmsMessage":
+                    messages.add(readVMSMessage(parser));
+                    break;
+                default:
+                    skip(parser);
+                    break;
+            }
+        }
+
+        id = vmsUnitReference;
+        publicationTime = messages.isEmpty() ? null : messages.get(0).getTimeLastSet();
+
+        return new VMSUnit(id, publicationTime, vmsUnitReference, messages);
+    }
+
+    private static VMSMessage readVMSMessage(XmlPullParser parser) throws XmlPullParserException, IOException {
+        parser.require(XmlPullParser.START_TAG, NS, "vmsMessage");
+        String timeLastSet = null;
+        String textContent = null;
+
+        while (parser.next() != XmlPullParser.END_TAG) {
+            if (parser.getEventType() != XmlPullParser.START_TAG) {
+                continue;
+            }
+            String name = parser.getName();
+            switch (name) {
+                case "timeLastSet":
+                    timeLastSet = readText(parser);
+                    break;
+                case "textLine":
+                    textContent = readText(parser);
+                    break;
+                default:
+                    skip(parser);
+                    break;
+            }
+        }
+
+        return new VMSMessage(timeLastSet, textContent);
+    }
+
+    private static void readSituationRecord(XmlPullParser parser, ItemCallback callback) throws XmlPullParserException, IOException {
+        parser.require(XmlPullParser.START_TAG, NS, TAG_SITUATION_RECORD);
+        String id = null;
+        String description = null;
+        String location = null;
+        String startDate = null;
+        String endDate = null;
+
+        while (parser.next() != XmlPullParser.END_TAG) {
+            if (parser.getEventType() != XmlPullParser.START_TAG) {
+                continue;
+            }
+            String name = parser.getName();
+            switch (name) {
+                case "situationRecordCreationReference":
+                    id = readText(parser);
+                    break;
+                case "generalPublicComment":
+                    description = readComment(parser);
+                    break;
+                case "groupOfLocations":
+                    location = readGroupOfLocations(parser);
+                    break;
+                case "validity":
+                    readValidity(parser, (start, end) -> {
+                        startDate = start;
+                        endDate = end;
+                    });
+                    break;
+                default:
+                    skip(parser);
+                    break;
+            }
+        }
+
+        callback.onItemParsed(new Item(id, null, description, location, null) {
+            @Override
+            public Date getStartDate() {
+                return parseDate(startDate);
+            }
+
+            @Override
+            public Date getEndDate() {
+                return parseDate(endDate);
+            }
+        });
     }
 
     private static String readComment(XmlPullParser parser) throws IOException, XmlPullParserException {
-        parser.require(XmlPullParser.START_TAG, ns, "comment");
+        parser.require(XmlPullParser.START_TAG, NS, "generalPublicComment");
         String comment = null;
         while (parser.next() != XmlPullParser.END_TAG) {
             if (parser.getEventType() != XmlPullParser.START_TAG) {
                 continue;
             }
             String name = parser.getName();
-            if (name.equals("values")) {
+            if (name.equals("comment")) {
                 comment = readText(parser);
             } else {
                 skip(parser);
@@ -139,7 +445,7 @@ public class DatexParser {
     }
 
     private static String readGroupOfLocations(XmlPullParser parser) throws IOException, XmlPullParserException {
-        parser.require(XmlPullParser.START_TAG, ns, "groupOfLocations");
+        parser.require(XmlPullParser.START_TAG, NS, "groupOfLocations");
         String location = null;
         while (parser.next() != XmlPullParser.END_TAG) {
             if (parser.getEventType() != XmlPullParser.START_TAG) {
@@ -156,7 +462,7 @@ public class DatexParser {
     }
 
     private static String readLocationForDisplay(XmlPullParser parser) throws IOException, XmlPullParserException {
-        parser.require(XmlPullParser.START_TAG, ns, "locationForDisplay");
+        parser.require(XmlPullParser.START_TAG, NS, "locationForDisplay");
         String latitude = null;
         String longitude = null;
         while (parser.next() != XmlPullParser.END_TAG) {
@@ -179,10 +485,55 @@ public class DatexParser {
         return latitude != null && longitude != null ? latitude + " " + longitude : null;
     }
 
+    private static void readValidity(XmlPullParser parser, ValidityCallback callback) throws IOException, XmlPullParserException {
+        parser.require(XmlPullParser.START_TAG, NS, "validity");
+        String startDate = null;
+        String endDate = null;
+        while (parser.next() != XmlPullParser.END_TAG) {
+            if (parser.getEventType() != XmlPullParser.START_TAG) {
+                continue;
+            }
+            String name = parser.getName();
+            if (name.equals("validityTimeSpecification")) {
+                readValidityTimeSpecification(parser, (start, end) -> {
+                    startDate = start;
+                    endDate = end;
+                });
+            } else {
+                skip(parser);
+            }
+        }
+        callback.onValidityParsed(startDate, endDate);
+    }
+
+    private static void readValidityTimeSpecification(XmlPullParser parser, ValidityCallback callback) throws IOException, XmlPullParserException {
+        parser.require(XmlPullParser.START_TAG, NS, "validityTimeSpecification");
+        String startDate = null;
+        String endDate = null;
+        while (parser.next() != XmlPullParser.END_TAG) {
+            if (parser.getEventType() != XmlPullParser.START_TAG) {
+                continue;
+            }
+            String name = parser.getName();
+            switch (name) {
+                case "overallStartTime":
+                    startDate = readText(parser);
+                    break;
+                case "overallEndTime":
+                    endDate = readText(parser);
+                    break;
+                default:
+                    skip(parser);
+                    break;
+            }
+        }
+        callback.onValidityParsed(startDate, endDate);
+    }
+
     private static String readPublicationTime(XmlPullParser parser) throws IOException, XmlPullParserException {
-        parser.require(XmlPullParser.START_TAG, ns, "publicationTime");
+        parser.require(XmlPullParser.START_TAG, NS, TAG_PUBLICATION_TIME);
         String pubDate = readText(parser);
-        parser.require(XmlPullParser.END_TAG, ns, "publicationTime");
+        parser.require(XmlPullParser.END_TAG, NS, TAG_PUBLICATION_TIME);
         return formatDate(pubDate);
     }
 
@@ -195,6 +546,19 @@ public class DatexParser {
         } catch (ParseException e) {
             Log.e("DatexParser", "Error parsing date: " + dateString, e);
             return dateString;
+        }
+    }
+
+    private static Date parseDate(String dateString) {
+        if (dateString == null) {
+            return null;
+        }
+        try {
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.UK);
+            return format.parse(dateString);
+        } catch (ParseException e) {
+            Log.e("DatexParser", "Error parsing date: " + dateString, e);
+            return null;
         }
     }
 
@@ -220,11 +584,17 @@ public class DatexParser {
                 case XmlPullParser.START_TAG:
                     depth++;
                     break;
+                default:
+                    throw new IllegalStateException("Unexpected value: " + parser.next());
             }
         }
     }
 
     private interface ItemCallback {
         void onItemParsed(Item item);
+    }
+
+    private interface ValidityCallback {
+        void onValidityParsed(String startDate, String endDate);
     }
 }

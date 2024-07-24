@@ -5,9 +5,8 @@ import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
+import android.net.NetworkCapabilities;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
@@ -40,14 +39,18 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * NetworkActions activity handles the loading and display of traffic data.
  * It manages network requests, parses XML data, and presents the information to the user.
  */
 public class NetworkActions extends AppCompatActivity {
-    private ArrayList<Item> loadedItems = new ArrayList<>();
+    private final ArrayList<Item> loadedItems = new ArrayList<>();
     private String authHeader;
+    private DataManager dataManager;
+    private ExecutorService executorService;
 
     /**
      * Initializes the activity, sets up UI components, and starts data loading.
@@ -62,13 +65,15 @@ public class NetworkActions extends AppCompatActivity {
 
         checkConnection();
 
+        dataManager = new DataManager(this);
+        executorService = Executors.newSingleThreadExecutor();
+
         Intent intent = getIntent();
-        String urlSource = intent.getStringExtra(MainActivity.EXTRA_FEED);
         authHeader = intent.getStringExtra("AUTH_HEADER");
 
         setupUI();
 
-        new Thread(new Task(urlSource)).start();
+        loadAllData();
     }
 
     /**
@@ -80,6 +85,7 @@ public class NetworkActions extends AppCompatActivity {
         Button dateSearchButton = findViewById(R.id.dateSearchButton);
         EditText dateSearchText = findViewById(R.id.dateSearchText);
         EditText searchBox = findViewById(R.id.searchBox);
+        Button refreshButton = findViewById(R.id.refreshButton);
 
         dateSearchText.setInputType(InputType.TYPE_NULL);
         dateSearchText.setOnTouchListener((v, event) -> {
@@ -101,6 +107,17 @@ public class NetworkActions extends AppCompatActivity {
         });
 
         dateSearchButton.setOnClickListener(view -> searchDate(dateSearchText.getText().toString()));
+
+        refreshButton.setOnClickListener(v -> refreshData());
+    }
+
+    private void loadAllData() {
+        executorService.execute(new LoadDataTask());
+    }
+
+    private void refreshData() {
+        dataManager.clearAllData();
+        loadAllData();
     }
 
     /**
@@ -150,7 +167,7 @@ public class NetworkActions extends AppCompatActivity {
     private List<Item> searchResults(String searchText) {
         List<Item> searchResults = new ArrayList<>();
         for (Item item : loadedItems) {
-            if (item.description != null && (item.title.equalsIgnoreCase(searchText) || item.description.contains(searchText))) {
+            if (item.getDescription() != null && (item.getTitle().equalsIgnoreCase(searchText) || item.getDescription().contains(searchText))) {
                 searchResults.add(item);
             }
         }
@@ -226,115 +243,193 @@ public class NetworkActions extends AppCompatActivity {
      *
      * @return true if a network connection is available, false otherwise.
      */
-    @SuppressLint("ObsoleteSdkInt")
-    @SuppressWarnings("deprecation")
+    @SuppressLint("MissingPermission")
     public boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         if (connectivityManager == null) {
             return false;
         }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            android.net.Network network = connectivityManager.getActiveNetwork();
-            if (network == null) {
-                return false;
-            }
-            android.net.NetworkCapabilities capabilities = connectivityManager.getNetworkCapabilities(network);
-            return capabilities != null && (
-                    capabilities.hasTransport(android.net.NetworkCapabilities.TRANSPORT_WIFI) ||
-                            capabilities.hasTransport(android.net.NetworkCapabilities.TRANSPORT_CELLULAR) ||
-                            capabilities.hasTransport(android.net.NetworkCapabilities.TRANSPORT_ETHERNET));
-        } else {
-            NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-            return activeNetworkInfo != null && activeNetworkInfo.isConnected();
-        }
+        NetworkCapabilities capabilities = connectivityManager.getNetworkCapabilities(connectivityManager.getActiveNetwork());
+        return capabilities != null && (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) ||
+                capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) ||
+                capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET));
     }
 
-    /**
-     * Asynchronous task for loading XML data from the network.
-     */
-    private class Task implements Runnable {
-        private final String feed;
-
-        public Task(String datafeed) {
-            feed = datafeed;
-        }
-
+    private class LoadDataTask implements Runnable {
         @Override
         public void run() {
+            boolean success = true;
             try {
-                if ("all".equals(feed)) {
-                    loadedItems = loadAllXmlFromNetwork();
-                } else {
-                    loadedItems = loadXmlFromNetwork(feed);
+                String[] urls = {
+                        MainActivity.DATEX_BASE_URL + MainActivity.CURRENT_ROADWORKS,
+                        MainActivity.DATEX_BASE_URL + MainActivity.PLANNED_ROADWORKS,
+                        MainActivity.DATEX_BASE_URL + MainActivity.CURRENT_INCIDENTS,
+                        MainActivity.DATEX_BASE_URL + "TrafficStatusData/content.xml",
+                        MainActivity.DATEX_BASE_URL + "TravelTimeData/content.xml",
+                        MainActivity.DATEX_BASE_URL + "VMS/content.xml"
+                };
+
+                for (String url : urls) {
+                    InputStream stream = downloadUrl(url);
+                    processData(url, stream);
+                    stream.close();
                 }
             } catch (IOException | XmlPullParserException e) {
-                Log.e("NetworkActions", "Error loading XML", e);
+                Log.e("NetworkActions", "Error loading data", e);
+                success = false;
             }
 
-            runOnUiThread(this::updateUI);
+            final boolean finalSuccess = success;
+            runOnUiThread(() -> {
+                if (finalSuccess) {
+                    updateUI();
+                    Toast.makeText(NetworkActions.this, "Data loaded successfully", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(NetworkActions.this, "Error loading data", Toast.LENGTH_SHORT).show();
+                }
+            });
         }
-
         private void updateUI() {
-            setContentView(R.layout.activity_results);
+            // Retrieve data from the database
+            List<Roadwork> allRoadworks = dataManager.getAllRoadworks();
+            List<UnplannedEvent> allEvents = dataManager.getAllUnplannedEvents();
+            List<TrafficStatusMeasurement> allTrafficStatuses = dataManager.getAllTrafficStatuses();
+            List<TravelTimeMeasurement> allTravelTimes = dataManager.getAllTravelTimes();
+            List<VMSUnit> allVMSUnits = dataManager.getAllVMSUnits();
+
+            // Convert objects to Item objects
+            loadedItems.clear();
+            for (Roadwork roadwork : allRoadworks) {
+                Item item = new Item(roadwork.getId(), roadwork.getDescription(), null, roadwork.getLocation(), roadwork.getPublicationTime());
+                item.setStartDate(roadwork.getStartDate());
+                item.setEndDate(roadwork.getEndDate());
+                loadedItems.add(item);
+            }
+
+            for (UnplannedEvent event : allEvents) {
+                Item item = new Item(event.getId(), event.getDescription(), null, event.getLocation(), event.getPublicationTime());
+                loadedItems.add(item);
+            }
+
+            for (TrafficStatusMeasurement status : allTrafficStatuses) {
+                Item item = new Item(status.getId(), status.getTrafficStatus(), null, status.getSiteReference(), status.getPublicationTime());
+                loadedItems.add(item);
+            }
+
+            for (TravelTimeMeasurement travelTime : allTravelTimes) {
+                Item item = new Item(travelTime.getId(), "Travel Time: " + travelTime.getTravelTime(), null, travelTime.getSiteReference(), travelTime.getPublicationTime());
+                loadedItems.add(item);
+            }
+
+            for (VMSUnit vmsUnit : allVMSUnits) {
+                for (VMSMessage message : vmsUnit.getMessages()) {
+                    Item item = new Item(vmsUnit.getId(), message.getTextContent(), null, vmsUnit.getVmsUnitReference(), message.getTimeLastSet());
+                    loadedItems.add(item);
+                }
+            }
+
+            // Update the ListView
             updateListView(loadedItems);
         }
-    }
 
-    /**
-     * Loads XML data from a single network source.
-     *
-     * @param urlString The URL to load data from.
-     * @return A list of Item objects parsed from the XML.
-     * @throws XmlPullParserException If there's an error parsing the XML.
-     * @throws IOException If there's an error reading from the network.
-     */
-    private ArrayList<Item> loadXmlFromNetwork(String urlString)
-            throws XmlPullParserException, IOException {
-        List<Item> items;
-        try (InputStream stream = downloadUrl(urlString)) {
-            items = DatexParser.parse(stream);
+        private InputStream downloadUrl(String urlString) throws IOException {
+            URL url = new URL(urlString);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setReadTimeout(10000);
+            conn.setConnectTimeout(15000);
+            conn.setRequestMethod("GET");
+            conn.setDoInput(true);
+            conn.setRequestProperty("Authorization", authHeader);
+            conn.connect();
+            return conn.getInputStream();
         }
-        return new ArrayList<>(items);
-    }
 
-    /**
-     * Loads XML data from all network sources.
-     *
-     * @return A list of Item objects parsed from all XML sources.
-     * @throws XmlPullParserException If there's an error parsing the XML.
-     * @throws IOException If there's an error reading from the network.
-     */
-    private ArrayList<Item> loadAllXmlFromNetwork()
-            throws XmlPullParserException, IOException {
-        String[] urls = {
-                MainActivity.DATEX_BASE_URL + MainActivity.CURRENT_INCIDENTS,
-                MainActivity.DATEX_BASE_URL + MainActivity.CURRENT_ROADWORKS,
-                MainActivity.DATEX_BASE_URL + MainActivity.PLANNED_ROADWORKS
-        };
-        ArrayList<Item> allItems = new ArrayList<>();
-        for (String url : urls) {
-            allItems.addAll(loadXmlFromNetwork(url));
+        private void processData(String url, InputStream stream) throws XmlPullParserException, IOException {
+            // Use a switch statement based on the URL content for better readability and potential performance improvement.
+            // Extract the URL constants to an enum for better organization and type safety.
+            switch (getEndpointType(url)) {
+                case CURRENT_ROADWORKS:
+                    List<CurrentRoadwork> currentRoadworks = DatexParser.parseCurrentRoadworks(stream);
+                    for (CurrentRoadwork roadwork : currentRoadworks) {
+                        dataManager.insertRoadwork(roadwork);
+                    }
+                    break;
+                case PLANNED_ROADWORKS:
+                    List<FutureRoadwork> futureRoadworks = DatexParser.parseFutureRoadworks(stream);
+                    for (FutureRoadwork roadwork : futureRoadworks) {
+                        dataManager.insertRoadwork(roadwork);
+                    }
+                    break;
+                case CURRENT_INCIDENTS:
+                    List<UnplannedEvent> events = DatexParser.parseUnplannedEvents(stream);
+                    for (UnplannedEvent event : events) {
+                        dataManager.insertUnplannedEvent(event);
+                    }
+                    break;
+                case TRAFFIC_STATUS:
+                    List<TrafficStatusMeasurement> statuses = DatexParser.parseTrafficStatus(stream);
+                    for (TrafficStatusMeasurement status : statuses) {
+                        dataManager.insertTrafficStatus(status);
+                    }
+                    break;
+                case TRAVEL_TIME:
+                    List<TravelTimeMeasurement> travelTimes = DatexParser.parseTravelTime(stream);
+                    for (TravelTimeMeasurement travelTime : travelTimes) {
+                        dataManager.insertTravelTime(travelTime);
+                    }
+                    break;
+                case VMS:
+                    List<VMSUnit> vmsUnits = DatexParser.parseVMS(stream);
+                    for (VMSUnit vmsUnit : vmsUnits) {
+                        dataManager.insertVMS(vmsUnit);
+                    }
+                    break;
+                default:
+                    // Handle unknown URL types, maybe log a warning or throw an exception.
+                    break;
+            }
         }
-        return allItems;
-    }
 
-    /**
-     * Downloads data from a URL.
-     *
-     * @param urlString The URL to download from.
-     * @return An InputStream containing the downloaded data.
-     * @throws IOException If there's an error downloading the data.
-     */
-    private InputStream downloadUrl(String urlString) throws IOException {
-        URL url = new URL(urlString);
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        conn.setReadTimeout(10000);
-        conn.setConnectTimeout(15000);
-        conn.setRequestMethod("GET");
-        conn.setDoInput(true);
-        conn.setRequestProperty("Authorization", authHeader);
-        conn.connect();
-        return conn.getInputStream();
+        // Define an enum for the different endpoint types
+        private enum EndpointType {
+            CURRENT_ROADWORKS,
+            PLANNED_ROADWORKS,
+            CURRENT_INCIDENTS,
+            TRAFFIC_STATUS,
+            TRAVEL_TIME,
+            VMS
+        }
+
+        // Helper method to determine the endpoint type from the URL
+        private EndpointType getEndpointType(String url) {
+                if (url == null) {
+                    return null;
+                }
+                if (url.contains(MainActivity.CURRENT_ROADWORKS)) {
+                return EndpointType.CURRENT_ROADWORKS;
+            } else if (url.contains(MainActivity.PLANNED_ROADWORKS)) {
+                return EndpointType.PLANNED_ROADWORKS;
+            } else if (url.contains(MainActivity.CURRENT_INCIDENTS)) {
+                return EndpointType.CURRENT_INCIDENTS;
+            } else if (url.contains("TrafficStatusData")) {
+                return EndpointType.TRAFFIC_STATUS;
+            } else if (url.contains("TravelTimeData")) {
+                return EndpointType.TRAVEL_TIME;
+            } else if (url.contains("VMS")) {
+                return EndpointType.VMS;
+            } else {
+                return null; // Or throw an exception for unknown types
+            }
+        }
+
+        }
+
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        executorService.shutdown();
     }
 }

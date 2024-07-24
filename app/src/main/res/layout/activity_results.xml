@@ -70,7 +70,7 @@
             tools:ignore="ButtonStyle,HardcodedText" />
 
         <Button
-            android:id="@+id/allButton"
+            android:id="@+id/refreshButton"
             style="@style/Widget.AppCompat.Button.Small"
             android:layout_width="0dp"
             android:layout_height="match_parent"
