@@ -1,12 +1,14 @@
 package org.me.gcu.lockhart_antony_s2040920;
 
+import androidx.annotation.NonNull;
+
 import java.util.Objects;
 
 public abstract class DatexItem {
     private String id;
     private String publicationTime;
 
-    public DatexItem(String id, String publicationTime) {
+    protected DatexItem(String id, String publicationTime) {
         this.id = id;
         this.publicationTime = publicationTime;
     }
@@ -41,6 +43,7 @@ public abstract class DatexItem {
         return Objects.hash(id, publicationTime);
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "DatexItem{" +

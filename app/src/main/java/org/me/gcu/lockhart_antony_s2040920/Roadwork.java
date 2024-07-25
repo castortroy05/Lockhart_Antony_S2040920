@@ -1,6 +1,12 @@
 package org.me.gcu.lockhart_antony_s2040920;
 
+import static java.time.LocalDate.parse;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Date;
+import java.util.Locale;
 
 public abstract class Roadwork {
     protected String id;
@@ -54,15 +60,22 @@ public abstract class Roadwork {
     }
 
     public Date getStartDate() {
-        return startDate;
+        LocalDate parsedStartDate = null;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE, dd MMM yyyy HH:mm:ss", Locale.UK);
+        parsedStartDate = parse(this.startDate, formatter);
+        return parsedStartDate;
     }
 
     public void setStartDate(String startDate) {
         this.startDate = startDate;
     }
 
-    public Date getEndDate() {
-        return endDate;
+
+    public Date getEndDate() throws DateTimeParseException {
+        LocalDate parsedEndDate = null;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE, dd MMM yyyy HH:mm:ss", Locale.UK);
+        parsedEndDate = parse(this.endDate, formatter);
+        return parsedEndDate;
     }
 
     public void setEndDate(String endDate) {

@@ -15,7 +15,6 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -180,7 +179,7 @@ public class NetworkActions extends AppCompatActivity {
      * @param items The list of items to display.
      */
     private void updateListView(List<Item> items) {
-        ArrayAdapter<Item> adapter = new ItemAdapter(NetworkActions.this, R.layout.list_item, items);
+        ItemAdapter adapter = new ItemAdapter(NetworkActions.this, R.layout.list_item, items);
         ListView lv = findViewById(R.id.listView1);
         TextView itemCount = findViewById(R.id.itemCount);
         itemCount.setText(MessageFormat.format("Displaying {0} items", items.size()));

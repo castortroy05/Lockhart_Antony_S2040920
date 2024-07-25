@@ -103,15 +103,15 @@ public class DatexParser {
         }
         return roadworks;
     }
-
+    @SuppressWarnings("unchecked")
     private static <T extends Roadwork> T readRoadwork(XmlPullParser parser, boolean isCurrent) throws XmlPullParserException, IOException {
         parser.require(XmlPullParser.START_TAG, NS, TAG_SITUATION);
         AtomicReference<String> id = new AtomicReference<>();
         String publicationTime = null;
-        String description = null;
-        String location = null;
-        String startDate = null;
-        String endDate = null;
+        final String[] description = {null};
+        final String[] location = {null};
+        final String[] startDate = {null};
+        final String[] endDate = {null};
 
         while (parser.next() != XmlPullParser.END_TAG) {
             if (parser.getEventType() != XmlPullParser.START_TAG) {
@@ -122,10 +122,10 @@ public class DatexParser {
                 case TAG_SITUATION_RECORD:
                     readSituationRecord(parser, item -> {
                         id.set(item.getId());
-                        description = item.getDescription();
-                        location = item.getLocation();
-                        startDate = item.getStartDate().toString();
-                        endDate = item.getEndDate().toString();
+                        description[0] = item.getDescription();
+                        location[0] = item.getLocation();
+                        startDate[0] = item.getStartDate().toString();
+                        endDate[0] = item.getEndDate().toString();
                     });
                     break;
                 case TAG_PUBLICATION_TIME:
@@ -138,9 +138,9 @@ public class DatexParser {
         }
 
         if (isCurrent) {
-            return (T) new CurrentRoadwork(id.get(), publicationTime, description, location, startDate, endDate);
+            return (T) new CurrentRoadwork(id.get(), publicationTime, description[0], location[0], startDate[0], endDate[0]);
         } else {
-            return (T) new FutureRoadwork(id.get(), publicationTime, description, location, startDate, endDate);
+            return (T) new FutureRoadwork(id.get(), publicationTime, description[0], location[0], startDate[0], endDate[0]);
         }
     }
 
@@ -164,10 +164,10 @@ public class DatexParser {
 
     private static UnplannedEvent readUnplannedEvent(XmlPullParser parser) throws XmlPullParserException, IOException {
         parser.require(XmlPullParser.START_TAG, NS, TAG_SITUATION);
-        String id = null;
+        final String[] id = {null};
         String publicationTime = null;
-        String description = null;
-        String location = null;
+        final String[] description = {null};
+        final String[] location = {null};
 
         while (parser.next() != XmlPullParser.END_TAG) {
             if (parser.getEventType() != XmlPullParser.START_TAG) {
@@ -177,9 +177,9 @@ public class DatexParser {
             switch (name) {
                 case TAG_SITUATION_RECORD:
                     readSituationRecord(parser, item -> {
-                        id = item.getId();
-                        description = item.getDescription();
-                        location = item.getLocation();
+                        id[0] = item.getId();
+                        description[0] = item.getDescription();
+                        location[0] = item.getLocation();
                     });
                     break;
                 case TAG_PUBLICATION_TIME:
@@ -191,7 +191,7 @@ public class DatexParser {
             }
         }
 
-        return new UnplannedEvent(id, publicationTime, description, location);
+        return new UnplannedEvent(id[0], publicationTime, description[0], location[0]);
     }
 
     private static List<TrafficStatusMeasurement> readTrafficStatus(XmlPullParser parser) throws XmlPullParserException, IOException {
@@ -214,8 +214,8 @@ public class DatexParser {
 
     private static TrafficStatusMeasurement readTrafficStatusMeasurement(XmlPullParser parser) throws XmlPullParserException, IOException {
         parser.require(XmlPullParser.START_TAG, NS, SITE_MEASUREMENTS);
-        String id = null;
-        String publicationTime = null;
+        String id;
+        String publicationTime;
         String siteReference = null;
         String measurementTime = null;
         String trafficStatus = null;
@@ -267,8 +267,8 @@ public class DatexParser {
 
     private static TravelTimeMeasurement readTravelTimeMeasurement(XmlPullParser parser) throws XmlPullParserException, IOException {
         parser.require(XmlPullParser.START_TAG, NS, SITE_MEASUREMENTS);
-        String id = null;
-        String publicationTime = null;
+        String id;
+        String publicationTime;
         String siteReference = null;
         String measurementTime = null;
         double travelTime = 0;
@@ -324,8 +324,8 @@ public class DatexParser {
 
     private static VMSUnit readVMSUnit(XmlPullParser parser) throws XmlPullParserException, IOException {
         parser.require(XmlPullParser.START_TAG, NS, "vmsUnit");
-        String id = null;
-        String publicationTime = null;
+        String id;
+        String publicationTime;
         String vmsUnitReference = null;
         List<VMSMessage> messages = new ArrayList<>();
 
@@ -384,8 +384,8 @@ public class DatexParser {
         String id = null;
         String description = null;
         String location = null;
-        String startDate = null;
-        String endDate = null;
+        final String[] startDate = {null};
+        final String[] endDate = {null};
 
         while (parser.next() != XmlPullParser.END_TAG) {
             if (parser.getEventType() != XmlPullParser.START_TAG) {
@@ -404,8 +404,8 @@ public class DatexParser {
                     break;
                 case "validity":
                     readValidity(parser, (start, end) -> {
-                        startDate = start;
-                        endDate = end;
+                        startDate[0] = start;
+                        endDate[0] = end;
                     });
                     break;
                 default:
@@ -417,12 +417,12 @@ public class DatexParser {
         callback.onItemParsed(new Item(id, null, description, location, null) {
             @Override
             public Date getStartDate() {
-                return parseDate(startDate);
+                return parseDate(startDate[0]);
             }
 
             @Override
             public Date getEndDate() {
-                return parseDate(endDate);
+                return parseDate(endDate[0]);
             }
         });
     }
@@ -487,8 +487,8 @@ public class DatexParser {
 
     private static void readValidity(XmlPullParser parser, ValidityCallback callback) throws IOException, XmlPullParserException {
         parser.require(XmlPullParser.START_TAG, NS, "validity");
-        String startDate = null;
-        String endDate = null;
+        final String[] startDate = {null};
+        final String[] endDate = {null};
         while (parser.next() != XmlPullParser.END_TAG) {
             if (parser.getEventType() != XmlPullParser.START_TAG) {
                 continue;
@@ -496,14 +496,14 @@ public class DatexParser {
             String name = parser.getName();
             if (name.equals("validityTimeSpecification")) {
                 readValidityTimeSpecification(parser, (start, end) -> {
-                    startDate = start;
-                    endDate = end;
+                    startDate[0] = start;
+                    endDate[0] = end;
                 });
             } else {
                 skip(parser);
             }
         }
-        callback.onValidityParsed(startDate, endDate);
+        callback.onValidityParsed(startDate[0], endDate[0]);
     }
 
     private static void readValidityTimeSpecification(XmlPullParser parser, ValidityCallback callback) throws IOException, XmlPullParserException {

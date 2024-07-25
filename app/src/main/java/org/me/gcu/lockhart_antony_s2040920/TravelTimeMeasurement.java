@@ -1,5 +1,7 @@
 package org.me.gcu.lockhart_antony_s2040920;
 
+import androidx.annotation.NonNull;
+
 import java.util.Objects;
 
 public class TravelTimeMeasurement extends DatexItem {
@@ -47,6 +49,7 @@ public class TravelTimeMeasurement extends DatexItem {
         return Objects.hash(super.hashCode(), siteReference, measurementTime, travelTime, freeFlowTravelTime);
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "TravelTimeMeasurement{" +

@@ -1,5 +1,6 @@
 package org.me.gcu.lockhart_antony_s2040920;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -48,7 +49,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         Log.d("MainActivity", "onCreate called");
 
-        // Initialize buttons and set click listeners
         Button incidentButton = findViewById(R.id.incidentButton);
         Button plannedButton = findViewById(R.id.plannedButton);
         Button currentButton = findViewById(R.id.currentButton);
@@ -59,7 +59,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         currentButton.setOnClickListener(this);
         allButton.setOnClickListener(this);
     }
-
+    @SuppressLint("ObsoleteSdkInt")
+    private String getAuthHeader() {
+        String auth = BuildConfig.CLIENT_ID + ":" + BuildConfig.CLIENT_KEY;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            return "Basic " + java.util.Base64.getEncoder().encodeToString(auth.getBytes());
+        } else {
+            return "Basic " + android.util.Base64.encodeToString(auth.getBytes(), android.util.Base64.NO_WRAP);
+        }
+    }
     /**
      * Handles click events for all buttons in the activity.
      * Checks for network availability, determines which button was clicked,
@@ -69,7 +77,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      */
     @Override
     public void onClick(View v) {
-        // Check if network is available before proceeding
         if (!isNetworkAvailable()) {
             showNetworkAlert();
             return;
@@ -77,13 +84,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         String urlSource;
         int id = v.getId();
-        // Determine which button was clicked and set the appropriate URL
         if (id == R.id.incidentButton) {
-            urlSource = DATEX_BASE_URL + CURRENT_INCIDENTS;
+            urlSource = Constants.DATEX_BASE_URL + Constants.CURRENT_INCIDENTS;
         } else if (id == R.id.plannedButton) {
-            urlSource = DATEX_BASE_URL + PLANNED_ROADWORKS;
+            urlSource = Constants.DATEX_BASE_URL + Constants.PLANNED_ROADWORKS;
         } else if (id == R.id.currentButton) {
-            urlSource = DATEX_BASE_URL + CURRENT_ROADWORKS;
+            urlSource = Constants.DATEX_BASE_URL + Constants.CURRENT_ROADWORKS;
         } else if (id == R.id.allButton) {
             urlSource = "all";
         } else {
@@ -91,7 +97,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             return;
         }
 
-        // Start the NetworkActions activity with the selected data source
         Intent intent = new Intent(this, NetworkActions.class);
         intent.putExtra(EXTRA_FEED, urlSource);
         intent.putExtra("AUTH_HEADER", getAuthHeader());
@@ -120,6 +125,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      *
      * @return true if a network connection is available, false otherwise.
      */
+    @SuppressLint("ObsoleteSdkInt")
+    @SuppressWarnings({"deprecation"})    // Suppress deprecation warnings for NetworkInfo
+
     private boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         if (connectivityManager == null) {
@@ -144,21 +152,5 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    /**
-     * Generates the authentication header for API requests.
-     * This method is backwards compatible and uses different Base64 encoding methods
-     * based on the Android version.
-     *
-     * @return A string containing the Basic Auth header value.
-     */
-    private String getAuthHeader() {
-        String auth = CLIENT_ID + ":" + CLIENT_KEY;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            // For Android 8.0 (API 26) and above
-            return "Basic " + java.util.Base64.getEncoder().encodeToString(auth.getBytes());
-        } else {
-            // For Android versions below 8.0
-            return "Basic " + android.util.Base64.encodeToString(auth.getBytes(), android.util.Base64.NO_WRAP);
-        }
-    }
+
 }

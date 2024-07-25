@@ -1,5 +1,4 @@
 package org.me.gcu.lockhart_antony_s2040920;
-//Lockhart_Antony_S2040920
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -9,180 +8,144 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import java.text.ParseException;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
-public class ItemAdapter extends ArrayAdapter<Item> {
+public class ItemAdapter extends ArrayAdapter<DatexItem> {
 
     private final List<Item> itemList;
 
-
     public ItemAdapter(Context context, int resource, List<Item> itemList) {
-        super(context, resource, itemList);
+        super(context, resource);
         this.itemList = itemList;
-
     }
 
-
-
-
-
-
-    @SuppressLint("SimpleDateFormat")
+    @SuppressLint({"SimpleDateFormat", "SetTextI18n"})
+    @NonNull
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-
-
-
-        Item item = getItem(position);
+    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.list_item, parent, false);
         }
+
+        DatexItem item = getItem(position);
+        if (item == null) return convertView;
+
         TextView itemName = convertView.findViewById(R.id.title);
         TextView itemDescription = convertView.findViewById(R.id.description);
-        TextView itemLink = convertView.findViewById(R.id.link);
-        TextView itemLocation =convertView.findViewById(R.id.location);
+        TextView itemLocation = convertView.findViewById(R.id.location);
         TextView txtDelayInfo = convertView.findViewById(R.id.txtDelayInfo);
         TextView txtStartDate = convertView.findViewById(R.id.txtStartDate);
         TextView txtEndDate = convertView.findViewById(R.id.txtEndDate);
-        TextView delayInfoLabel = convertView.findViewById(R.id.delayInfoLabel);
-        TextView startDateLabel = convertView.findViewById(R.id.startDateLabel);
-        TextView endDateLabel = convertView.findViewById(R.id.endDateLabel);
-        TextView descriptionLabel = convertView.findViewById(R.id.descriptionLabel);
         TextView delayDuration = convertView.findViewById(R.id.delayDuration);
-        TextView delayDurationLabel = convertView.findViewById(R.id.delayDurationLabel);
 
+        itemName.setText(item.getId().toUpperCase());
+        itemDescription.setText(item.getPublicationTime());
 
-        txtDelayInfo.setVisibility(View.VISIBLE);
-        delayInfoLabel.setVisibility(View.VISIBLE);
-        txtStartDate.setVisibility(View.VISIBLE);
-        startDateLabel.setVisibility(View.VISIBLE);
-        txtEndDate.setVisibility(View.VISIBLE);
-        endDateLabel.setVisibility(View.VISIBLE);
-        itemDescription.setVisibility(View.VISIBLE);
-        descriptionLabel.setVisibility(View.VISIBLE);
-        delayDuration.setVisibility(View.VISIBLE);
-        delayDurationLabel.setVisibility(View.VISIBLE);
-
-
-
-        if(item.description.contains("<br />")){
-            String[] info = item.description.split("<br />");
-            String startDateStr = info[0];
-
-            String endDateStr = "";
-            if(info.length > 1)
-                endDateStr = info[1];
-
-            startDateStr = startDateStr.substring(12);
-            endDateStr = endDateStr.substring(10);
-            Date startDate = null;
-            Date endDate = null;
-
-            try {
-                startDate = new SimpleDateFormat("EE, dd MMMM yyyy - kk:mm").parse(startDateStr);
-                endDate = new SimpleDateFormat("EE, dd MMMM yyyy - kk:mm").parse(endDateStr);
-            } catch (ParseException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-
-
-            Date startDate1 = startDate;
-            Date endDate1 = endDate;
-            long difference = 0;
-            if (endDate1 != null) {
-                difference = Math.abs(startDate1.getTime() - endDate1.getTime());
-            }
-            long differenceDates = difference / (24 * 60 * 60 * 1000);
-            String dayDifference = Long.toString(differenceDates);
-            if(differenceDates > 7 )
-            {
-                delayDuration.setTextColor(getContext().getResources().getColor(R.color.Orange));
-                delayDurationLabel.setTextColor(getContext().getResources().getColor(R.color.Orange));
-            }
-            if(differenceDates > 30)
-            {
-                delayDuration.setTextColor(getContext().getResources().getColor(R.color.Red));
-                delayDurationLabel.setTextColor(getContext().getResources().getColor(R.color.Red));
-            }
-           if(differenceDates < 7)
-            {
-                delayDuration.setTextColor(getContext().getResources().getColor(R.color.GreenYellow));
-                delayDurationLabel.setTextColor(getContext().getResources().getColor(R.color.GreenYellow));
-            }
-
-            delayDuration.setText(dayDifference);
-
-            delayInfoLabel.setVisibility(View.VISIBLE);
-//            Log.e("Crash", info[1]);
-            if(info[2] != null){
-            txtDelayInfo.setText(info[2]);
-            if(info[2].contains("Delay Information")){delayInfoLabel.setVisibility(View.GONE);}}
-            if (startDate1 != null) {
-                txtStartDate.setText(startDate1.toString());
-            }
-            if (endDate1 != null) {
-                txtEndDate.setText(endDate1.toString());
-            }
-            if(item.title == null){item.title = "No title in file";
-            itemName.setText(item.title.toUpperCase());}
-            else{itemName.setText(item.title.toUpperCase());}
-
-            if((info[2].contains("TYPE")) || (info[2].contains("Works"))){
-                itemName.setBackgroundResource(R.color.RoyalBlue);
-            }
-            else {
-                itemName.setBackgroundResource(R.color.CornflowerBlue);
-            }
-            itemDescription.setText(item.description);
-            itemDescription.setVisibility(View.GONE);
-            descriptionLabel.setVisibility(View.GONE);
-//            delayInfoLabel.setVisibility(View.GONE);
-            itemLink.setText(item.link);
-            itemLink.setVisibility(View.GONE);
-            String[] latlong = item.location.split(" ");
-            StringBuilder locationLink = new StringBuilder();
-            locationLink.append("https://www.google.com/maps?z=12&t=k&q=").append("loc:").append(latlong[0]).append("+").append(latlong[1]);
-            itemLocation.setText(locationLink);
-            itemLocation.setVisibility(View.GONE);
-
-            return convertView;
-        }
-else {
-            txtDelayInfo.setVisibility(View.GONE);
-            delayInfoLabel.setVisibility(View.GONE);
-            txtStartDate.setVisibility(View.GONE);
-            startDateLabel.setVisibility(View.GONE);
-            txtEndDate.setVisibility(View.GONE);
-            endDateLabel.setVisibility(View.GONE);
-            if(item.title == null){item.title = "No title in file";
-
-                itemName.setText(item.title.toUpperCase());}
-            else{            itemName.setText(item.title.toUpperCase());}
-            itemName.setBackgroundResource(R.color.DodgerBlue);
-            itemDescription.setText(item.description);
-            delayDurationLabel.setVisibility(View.GONE);
-            delayDuration.setVisibility(View.GONE);
-            itemLink.setText(item.link);
-            itemLink.setVisibility(View.GONE);
-            itemLocation.setVisibility(View.GONE);
-            String[] latlong = item.location.split(" ");
-            StringBuilder locationLink = new StringBuilder();
-            locationLink.append("https://www.google.com/maps?z=12&t=k&q=").append("loc:").append(latlong[0]).append("+").append(latlong[1]);
-            itemLocation.setText(locationLink);
+        if (item instanceof Roadwork roadwork) {
+            setupRoadworkView(roadwork, itemName, itemDescription, txtStartDate, txtEndDate, delayDuration);
+        } else if (item instanceof UnplannedEvent event) {
+            setupUnplannedEventView(event, itemName, itemDescription, txtDelayInfo);
+        } else if (item instanceof TrafficStatusMeasurement status) {
+            setupTrafficStatusView(status, itemName, itemDescription);
+        } else if (item instanceof TravelTimeMeasurement travelTime) {
+            setupTravelTimeView(travelTime, itemName, itemDescription);
+        } else if (item instanceof VMSUnit vmsUnit) {
+            setupVMSView(vmsUnit, itemName, itemDescription);
         }
 
+        setupLocationLink(item, itemLocation);
 
         return convertView;
+    }
+
+    private void setupRoadworkView(Roadwork roadwork, TextView itemName, TextView itemDescription,
+                                   TextView txtStartDate, TextView txtEndDate, TextView delayDuration) {
+        itemName.setText(roadwork instanceof CurrentRoadwork ? "Current Roadwork" : "Future Roadwork");
+        itemDescription.setText(roadwork.getDescription());
+        txtStartDate.setText(formatDate(roadwork.getStartDate()));
+        txtEndDate.setText(formatDate(roadwork.getEndDate()));
+
+        long daysToComplete = calculateDaysBetween(roadwork.getStartDate(), roadwork.getEndDate());
+        delayDuration.setText(String.valueOf(daysToComplete));
+        setDelayDurationColor(delayDuration, daysToComplete);
+    }
+
+    private void setupUnplannedEventView(UnplannedEvent event, TextView itemName, TextView itemDescription,
+                                         TextView txtDelayInfo) {
+        itemName.setText("Unplanned Event");
+        itemDescription.setText(event.getDescription());
+        txtDelayInfo.setText(event.getDescription());
+    }
+
+    private void setupTrafficStatusView(TrafficStatusMeasurement status, TextView itemName, TextView itemDescription) {
+        itemName.setText("Traffic Status");
+        itemDescription.setText(status.getTrafficStatus());
+    }
+
+    private void setupTravelTimeView(TravelTimeMeasurement travelTime, TextView itemName, TextView itemDescription) {
+        itemName.setText("Travel Time");
+        itemDescription.setText(String.format(Locale.getDefault(),
+                "Travel Time: %.2f, Free Flow Time: %.2f",
+                travelTime.getTravelTime(), travelTime.getFreeFlowTravelTime()));
+    }
+
+    private void setupVMSView(VMSUnit vmsUnit, TextView itemName, TextView itemDescription) {
+        itemName.setText("VMS Message");
+        if (!vmsUnit.getMessages().isEmpty()) {
+            itemDescription.setText(vmsUnit.getMessages().get(0).getTextContent());
+        }
+    }
+
+    private void setupLocationLink(DatexItem item, TextView itemLocation) {
+        String location = "";
+        if (item instanceof Roadwork) {
+            location = ((Roadwork) item).getLocation();
+        } else if (item instanceof UnplannedEvent) {
+            location = ((UnplannedEvent) item).getLocation();
+        }
+
+        if (!location.isEmpty()) {
+            String[] latlong = location.split(" ");
+            if (latlong.length == 2) {
+                String locationLink = "https://www.google.com/maps?z=12&t=k&q=loc:" + latlong[0] + "+" + latlong[1];
+                itemLocation.setText(locationLink);
+            }
+        }
+    }
+
+    private String formatDate(Date date) {
+        if (date == null) return "";
+        SimpleDateFormat sdf = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss", Locale.UK);
+        return sdf.format(date);
+    }
+
+    private long calculateDaysBetween(Date startDate, Date endDate) {
+        if (startDate == null || endDate == null) return 0;
+        long difference = Math.abs(endDate.getTime() - startDate.getTime());
+        return difference / (24 * 60 * 60 * 1000);
+    }
+
+    private void setDelayDurationColor(TextView delayDuration, long days) {
+        int colorResId;
+        if (days < 7) {
+            colorResId = R.color.GreenYellow;
+        } else if (days < 30) {
+            colorResId = R.color.Orange;
+        } else {
+            colorResId = R.color.Red;
+        }
+        delayDuration.setTextColor(ContextCompat.getColor(getContext(), colorResId));
     }
 
     @Override
     public int getCount() {
         return itemList.size();
-
     }
-
 }
