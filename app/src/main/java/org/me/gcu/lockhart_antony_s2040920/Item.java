@@ -1,5 +1,9 @@
 package org.me.gcu.lockhart_antony_s2040920;
 
+import android.util.Log;
+
+import androidx.annotation.NonNull;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -38,6 +42,14 @@ public class Item {
         parseDescription();
     }
 
+    public Item(String id, String publicationTime, String id1, String title, String description, String location, String publicationTime1) {
+        this.id = id1;
+        this.title = title;
+        this.description = description;
+        this.location = location;
+        this.publicationTime = publicationTime1;
+    }
+
     /**
      * Parses the description to extract start and end dates if available.
      */
@@ -65,7 +77,7 @@ public class Item {
         try {
             return format.parse(dateStr);
         } catch (ParseException e) {
-            e.printStackTrace();
+            Log.e("Item", "Error parsing date: " + dateStr, e);
             return null;
         }
     }
@@ -113,6 +125,7 @@ public class Item {
         return Objects.hash(id, title, description, location, publicationTime);
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "Item{" +

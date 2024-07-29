@@ -1,6 +1,6 @@
 package org.me.gcu.lockhart_antony_s2040920;
 
-public class TrafficStatusMeasurement {
+public class TrafficStatusMeasurement extends DatexItem {
     private String id;
     private String publicationTime;
     private String siteReference;

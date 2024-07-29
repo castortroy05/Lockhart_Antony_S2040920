@@ -159,6 +159,9 @@
     <color name="DarkBlue">#00008B</color>
     <color name="Navy">#000080</color>
     <color name="white">#FFFFFF</color>
+    <color name="green_yellow">#ADFF2F</color>
+    <color name="orange">#FFA500</color>
+
 
 
 </resources>

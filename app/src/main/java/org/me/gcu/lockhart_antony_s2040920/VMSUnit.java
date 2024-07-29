@@ -2,7 +2,7 @@ package org.me.gcu.lockhart_antony_s2040920;
 
 import java.util.List;
 
-public class VMSUnit {
+public class VMSUnit extends DatexItem {
     private String id;
     private String publicationTime;
     private String vmsUnitReference;

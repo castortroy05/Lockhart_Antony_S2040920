@@ -1,4 +1,11 @@
 <resources>
     <string name="app_name">Lockhart_Antony_S2040920</string>
+    <string name="current_roadwork">Current Roadwork</string>
+    <string name="future_roadwork">Future Roadwork</string>
+    <string name="unplanned_event">Unplanned Event</string>
+    <string name="traffic_status">Traffic Status</string>
+    <string name="travel_time">Travel Time</string>
+    <string name="travel_time_format">Travel Time: %.2f min, Free Flow: %.2f min</string>
+    <string name="vms_message">VMS Message</string>
     <item name="link" type="id" />
 </resources>

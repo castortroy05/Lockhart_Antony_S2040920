@@ -1,46 +1,24 @@
 package org.me.gcu.lockhart_antony_s2040920;
 
-import static java.time.LocalDate.parse;
+import android.util.Log;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.Date;
 import java.util.Locale;
 
-public abstract class Roadwork {
-    protected String id;
-    protected String publicationTime;
+public abstract class Roadwork extends DatexItem {
     protected String description;
     protected String location;
-    protected String startDate;
-    protected String endDate;
+    protected LocalDate startDate;
+    protected LocalDate endDate;
 
     protected Roadwork(String id, String publicationTime, String description, String location, String startDate, String endDate) {
-        this.id = id;
-        this.publicationTime = publicationTime;
+        super(id, publicationTime);
         this.description = description;
         this.location = location;
-        this.startDate = startDate;
-        this.endDate = endDate;
-    }
-
-    // Getters (and potentially setters) would go here
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getPublicationTime() {
-        return publicationTime;
-    }
-
-    public void setPublicationTime(String publicationTime) {
-        this.publicationTime = publicationTime;
+        this.startDate = parseDate(startDate);
+        this.endDate = parseDate(endDate);
     }
 
     public String getDescription() {
@@ -59,26 +37,30 @@ public abstract class Roadwork {
         this.location = location;
     }
 
-    public Date getStartDate() {
-        LocalDate parsedStartDate = null;
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE, dd MMM yyyy HH:mm:ss", Locale.UK);
-        parsedStartDate = parse(this.startDate, formatter);
-        return parsedStartDate;
+    public LocalDate getStartDate() {
+        return startDate;
     }
 
     public void setStartDate(String startDate) {
-        this.startDate = startDate;
+        this.startDate = parseDate(startDate);
     }
 
-
-    public Date getEndDate() throws DateTimeParseException {
-        LocalDate parsedEndDate = null;
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE, dd MMM yyyy HH:mm:ss", Locale.UK);
-        parsedEndDate = parse(this.endDate, formatter);
-        return parsedEndDate;
+    public LocalDate getEndDate() {
+        return endDate;
     }
 
     public void setEndDate(String endDate) {
-        this.endDate = endDate;
+        this.endDate = parseDate(endDate);
+    }
+
+    private LocalDate parseDate(String dateString) {
+        if (dateString == null) return null;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE, dd MMM yyyy HH:mm:ss", Locale.UK);
+        try {
+            return LocalDate.parse(dateString, formatter);
+        } catch (DateTimeParseException e) {
+            Log.e("Roadwork", "Error parsing date: " + dateString, e);
+            return null;
+        }
     }
 }

@@ -3,10 +3,17 @@ package org.me.gcu.lockhart_antony_s2040920;
 import androidx.annotation.NonNull;
 
 import java.util.Objects;
+import java.util.UUID;
 
 public abstract class DatexItem {
     private String id;
     private String publicationTime;
+
+    // Add a parameterless constructor
+    protected DatexItem() {
+        this.id = UUID.randomUUID().toString();
+        this.publicationTime = "";
+    }
 
     protected DatexItem(String id, String publicationTime) {
         this.id = id;

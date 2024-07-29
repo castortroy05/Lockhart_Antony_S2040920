@@ -1,33 +1,34 @@
 package org.me.gcu.lockhart_antony_s2040920;
 
-public class UnplannedEvent {
-    private final String id;
-    private final String publicationTime;
-    private final String description;
-    private final String location;
+public class UnplannedEvent extends DatexItem {
+    private String description;
+    private String location;
+
+    // Parameterless constructor
+    public UnplannedEvent() {
+        super();
+    }
 
     public UnplannedEvent(String id, String publicationTime, String description, String location) {
-        this.id = id;
-        this.publicationTime = publicationTime;
+        super(id, publicationTime);
         this.description = description;
         this.location = location;
     }
 
-    // Getters (and potentially setters) would go here
-
-    public String getId() {
-        return id;
-    }
-
-    public String getPublicationTime() {
-        return publicationTime;
-    }
-
+    // Getters and setters
     public String getDescription() {
         return description;
     }
 
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public String getLocation() {
         return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
     }
 }

@@ -1,6 +1,5 @@
 package org.me.gcu.lockhart_antony_s2040920;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,21 +11,21 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Locale;
 
 public class ItemAdapter extends ArrayAdapter<DatexItem> {
 
-    private final List<Item> itemList;
+    private final List<DatexItem> itemList;
 
-    public ItemAdapter(Context context, int resource, List<Item> itemList) {
-        super(context, resource);
+    public ItemAdapter(Context context, int resource, List<DatexItem> itemList) {
+        super(context, resource, itemList);
         this.itemList = itemList;
     }
 
-    @SuppressLint({"SimpleDateFormat", "SetTextI18n"})
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
@@ -45,17 +44,17 @@ public class ItemAdapter extends ArrayAdapter<DatexItem> {
         TextView txtEndDate = convertView.findViewById(R.id.txtEndDate);
         TextView delayDuration = convertView.findViewById(R.id.delayDuration);
 
-        itemName.setText(item.getId().toUpperCase());
+        itemName.setText(item.getId());
         itemDescription.setText(item.getPublicationTime());
 
         if (item instanceof Roadwork roadwork) {
             setupRoadworkView(roadwork, itemName, itemDescription, txtStartDate, txtEndDate, delayDuration);
-        } else if (item instanceof UnplannedEvent event) {
-            setupUnplannedEventView(event, itemName, itemDescription, txtDelayInfo);
-        } else if (item instanceof TrafficStatusMeasurement status) {
-            setupTrafficStatusView(status, itemName, itemDescription);
-        } else if (item instanceof TravelTimeMeasurement travelTime) {
-            setupTravelTimeView(travelTime, itemName, itemDescription);
+        } else if (item instanceof UnplannedEvent unplannedEvent) {
+            setupUnplannedEventView(unplannedEvent, itemName, itemDescription, txtDelayInfo);
+        } else if (item instanceof TrafficStatusMeasurement trafficStatusMeasurement) {
+            setupTrafficStatusView(trafficStatusMeasurement, itemName, itemDescription);
+        } else if (item instanceof TravelTimeMeasurement travelTimeMeasurement) {
+            setupTravelTimeView(travelTimeMeasurement, itemName, itemDescription);
         } else if (item instanceof VMSUnit vmsUnit) {
             setupVMSView(vmsUnit, itemName, itemDescription);
         }
@@ -67,7 +66,7 @@ public class ItemAdapter extends ArrayAdapter<DatexItem> {
 
     private void setupRoadworkView(Roadwork roadwork, TextView itemName, TextView itemDescription,
                                    TextView txtStartDate, TextView txtEndDate, TextView delayDuration) {
-        itemName.setText(roadwork instanceof CurrentRoadwork ? "Current Roadwork" : "Future Roadwork");
+        itemName.setText(roadwork instanceof CurrentRoadwork ? R.string.current_roadwork : R.string.future_roadwork);
         itemDescription.setText(roadwork.getDescription());
         txtStartDate.setText(formatDate(roadwork.getStartDate()));
         txtEndDate.setText(formatDate(roadwork.getEndDate()));
@@ -79,25 +78,25 @@ public class ItemAdapter extends ArrayAdapter<DatexItem> {
 
     private void setupUnplannedEventView(UnplannedEvent event, TextView itemName, TextView itemDescription,
                                          TextView txtDelayInfo) {
-        itemName.setText("Unplanned Event");
+        itemName.setText(R.string.unplanned_event);
         itemDescription.setText(event.getDescription());
         txtDelayInfo.setText(event.getDescription());
     }
 
     private void setupTrafficStatusView(TrafficStatusMeasurement status, TextView itemName, TextView itemDescription) {
-        itemName.setText("Traffic Status");
+        itemName.setText(R.string.traffic_status);
         itemDescription.setText(status.getTrafficStatus());
     }
 
     private void setupTravelTimeView(TravelTimeMeasurement travelTime, TextView itemName, TextView itemDescription) {
-        itemName.setText("Travel Time");
+        itemName.setText(R.string.travel_time);
         itemDescription.setText(String.format(Locale.getDefault(),
-                "Travel Time: %.2f, Free Flow Time: %.2f",
+                getContext().getString(R.string.travel_time_format),
                 travelTime.getTravelTime(), travelTime.getFreeFlowTravelTime()));
     }
 
     private void setupVMSView(VMSUnit vmsUnit, TextView itemName, TextView itemDescription) {
-        itemName.setText("VMS Message");
+        itemName.setText(R.string.vms_message);
         if (!vmsUnit.getMessages().isEmpty()) {
             itemDescription.setText(vmsUnit.getMessages().get(0).getTextContent());
         }
@@ -105,10 +104,10 @@ public class ItemAdapter extends ArrayAdapter<DatexItem> {
 
     private void setupLocationLink(DatexItem item, TextView itemLocation) {
         String location = "";
-        if (item instanceof Roadwork) {
-            location = ((Roadwork) item).getLocation();
-        } else if (item instanceof UnplannedEvent) {
-            location = ((UnplannedEvent) item).getLocation();
+        if (item instanceof Roadwork roadwork) {
+            location = roadwork.getLocation();
+        } else if (item instanceof UnplannedEvent unplannedEvent) {
+            location = unplannedEvent.getLocation();
         }
 
         if (!location.isEmpty()) {
@@ -120,26 +119,25 @@ public class ItemAdapter extends ArrayAdapter<DatexItem> {
         }
     }
 
-    private String formatDate(Date date) {
+    private String formatDate(LocalDate date) {
         if (date == null) return "";
-        SimpleDateFormat sdf = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss", Locale.UK);
-        return sdf.format(date);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE, dd MMM yyyy", Locale.UK);
+        return date.format(formatter);
     }
 
-    private long calculateDaysBetween(Date startDate, Date endDate) {
+    private long calculateDaysBetween(LocalDate startDate, LocalDate endDate) {
         if (startDate == null || endDate == null) return 0;
-        long difference = Math.abs(endDate.getTime() - startDate.getTime());
-        return difference / (24 * 60 * 60 * 1000);
+        return ChronoUnit.DAYS.between(startDate, endDate);
     }
 
     private void setDelayDurationColor(TextView delayDuration, long days) {
         int colorResId;
         if (days < 7) {
-            colorResId = R.color.GreenYellow;
+            colorResId = R.color.green_yellow;
         } else if (days < 30) {
-            colorResId = R.color.Orange;
+            colorResId = R.color.orange;
         } else {
-            colorResId = R.color.Red;
+            colorResId = R.color.red;
         }
         delayDuration.setTextColor(ContextCompat.getColor(getContext(), colorResId));
     }
