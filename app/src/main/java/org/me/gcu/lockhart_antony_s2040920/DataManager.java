@@ -187,126 +187,155 @@ public class DataManager extends SQLiteOpenHelper {
     public List<UnplannedEvent> getAllUnplannedEvents() {
         List<UnplannedEvent> events = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
-        String query = SELECT_ALL_FROM + TABLE_EVENTS + " WHERE " + COLUMN_TYPE + " = 'Unplanned'";
+        // Use parameterized query to prevent SQL injection
+        Cursor cursor = null;
+        try {
+            cursor = db.query(
+                    TABLE_EVENTS,
+                    null,
+                    COLUMN_TYPE + " = ?",
+                    new String[]{"Unplanned"},
+                    null,
+                    null,
+                    null
+            );
+            if (cursor.moveToFirst()) {
+                do {
+                    String id = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_ID));
+                    String publicationTime = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_PUBLICATION_TIME));
+                    String description = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_DESCRIPTION));
+                    String location = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_LOCATION));
 
-        Cursor cursor = db.rawQuery(query, null);
-        if (cursor.moveToFirst()) {
-            do {
-                String id = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_ID));
-                String publicationTime = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_PUBLICATION_TIME));
-                String description = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_DESCRIPTION));
-                String location = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_LOCATION));
-
-                UnplannedEvent event = new UnplannedEvent(id, publicationTime, description, location);
-                events.add(event);
-            } while (cursor.moveToNext());
+                    UnplannedEvent event = new UnplannedEvent(id, publicationTime, description, location);
+                    events.add(event);
+                } while (cursor.moveToNext());
+            }
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+            db.close();
         }
-        cursor.close();
-        db.close();
         return events;
     }
 
     public List<TrafficStatusMeasurement> getAllTrafficStatuses() {
         List<TrafficStatusMeasurement> statuses = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
-        String query = SELECT_ALL_FROM + TABLE_TRAFFIC_STATUS;
+        Cursor cursor = null;
+        try {
+            cursor = db.query(TABLE_TRAFFIC_STATUS, null, null, null, null, null, null);
+            if (cursor.moveToFirst()) {
+                do {
+                    String id = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_ID));
+                    String publicationTime = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_PUBLICATION_TIME));
+                    String siteReference = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_SITE_REFERENCE));
+                    String measurementTime = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_MEASUREMENT_TIME));
+                    String trafficStatus = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_TRAFFIC_STATUS));
 
-        Cursor cursor = db.rawQuery(query, null);
-        if (cursor.moveToFirst()) {
-            do {
-                String id = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_ID));
-                String publicationTime = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_PUBLICATION_TIME));
-                String siteReference = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_SITE_REFERENCE));
-                String measurementTime = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_MEASUREMENT_TIME));
-                String trafficStatus = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_TRAFFIC_STATUS));
-
-                TrafficStatusMeasurement status = new TrafficStatusMeasurement(id, publicationTime, siteReference, measurementTime, trafficStatus);
-                statuses.add(status);
-            } while (cursor.moveToNext());
+                    TrafficStatusMeasurement status = new TrafficStatusMeasurement(id, publicationTime, siteReference, measurementTime, trafficStatus);
+                    statuses.add(status);
+                } while (cursor.moveToNext());
+            }
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+            db.close();
         }
-        cursor.close();
-        db.close();
         return statuses;
     }
 
     public List<TravelTimeMeasurement> getAllTravelTimes() {
         List<TravelTimeMeasurement> travelTimes = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
-        String query = SELECT_ALL_FROM + TABLE_TRAVEL_TIME;
+        Cursor cursor = null;
+        try {
+            cursor = db.query(TABLE_TRAVEL_TIME, null, null, null, null, null, null);
+            if (cursor.moveToFirst()) {
+                do {
+                    String id = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_ID));
+                    String publicationTime = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_PUBLICATION_TIME));
+                    String siteReference = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_SITE_REFERENCE));
+                    String measurementTime = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_MEASUREMENT_TIME));
+                    double travelTime = cursor.getDouble(cursor.getColumnIndexOrThrow(COLUMN_TRAVEL_TIME));
+                    double freeFlowTravelTime = cursor.getDouble(cursor.getColumnIndexOrThrow(COLUMN_FREE_FLOW_TRAVEL_TIME));
 
-        Cursor cursor = db.rawQuery(query, null);
-        if (cursor.moveToFirst()) {
-            do {
-                String id = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_ID));
-                String publicationTime = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_PUBLICATION_TIME));
-                String siteReference = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_SITE_REFERENCE));
-                String measurementTime = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_MEASUREMENT_TIME));
-                double travelTime = cursor.getDouble(cursor.getColumnIndexOrThrow(COLUMN_TRAVEL_TIME));
-                double freeFlowTravelTime = cursor.getDouble(cursor.getColumnIndexOrThrow(COLUMN_FREE_FLOW_TRAVEL_TIME));
-
-                TravelTimeMeasurement measurement = new TravelTimeMeasurement(id, publicationTime, siteReference, measurementTime, travelTime, freeFlowTravelTime);
-                travelTimes.add(measurement);
-            } while (cursor.moveToNext());
+                    TravelTimeMeasurement measurement = new TravelTimeMeasurement(id, publicationTime, siteReference, measurementTime, travelTime, freeFlowTravelTime);
+                    travelTimes.add(measurement);
+                } while (cursor.moveToNext());
+            }
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+            db.close();
         }
-        cursor.close();
-        db.close();
         return travelTimes;
     }
 
     public List<VMSUnit> getAllVMSUnits() {
         List<VMSUnit> vmsUnits = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
-        String query = SELECT_ALL_FROM + TABLE_VMS;
+        Cursor cursor = null;
+        try {
+            cursor = db.query(TABLE_VMS, null, null, null, null, null, null);
+            if (cursor.moveToFirst()) {
+                do {
+                    String id = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_ID));
+                    String publicationTime = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_PUBLICATION_TIME));
+                    String vmsUnitReference = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_VMS_UNIT_REFERENCE));
+                    String messageTime = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_MESSAGE_TIME));
+                    String messageText = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_MESSAGE_TEXT));
 
-        Cursor cursor = db.rawQuery(query, null);
-        if (cursor.moveToFirst()) {
-            do {
-                String id = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_ID));
-                String publicationTime = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_PUBLICATION_TIME));
-                String vmsUnitReference = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_VMS_UNIT_REFERENCE));
-                String messageTime = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_MESSAGE_TIME));
-                String messageText = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_MESSAGE_TEXT));
+                    VMSMessage message = new VMSMessage(messageTime, messageText);
+                    List<VMSMessage> messages = new ArrayList<>();
+                    messages.add(message);
 
-                VMSMessage message = new VMSMessage(messageTime, messageText);
-                List<VMSMessage> messages = new ArrayList<>();
-                messages.add(message);
-
-                VMSUnit vmsUnit = new VMSUnit(id, publicationTime, vmsUnitReference, messages);
-                vmsUnits.add(vmsUnit);
-            } while (cursor.moveToNext());
+                    VMSUnit vmsUnit = new VMSUnit(id, publicationTime, vmsUnitReference, messages);
+                    vmsUnits.add(vmsUnit);
+                } while (cursor.moveToNext());
+            }
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+            db.close();
         }
-        cursor.close();
-        db.close();
         return vmsUnits;
     }
 
     public List<Roadwork> getAllRoadworks() {
         List<Roadwork> roadworks = new ArrayList<>();
-        String selectQuery = SELECT_ALL_FROM + TABLE_ROADWORKS;
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery, null);
+        Cursor cursor = null;
+        try {
+            cursor = db.query(TABLE_ROADWORKS, null, null, null, null, null, null);
+            if (cursor.moveToFirst()) {
+                do {
+                    String type = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_TYPE));
+                    String id = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_ID));
+                    String publicationTime = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_PUBLICATION_TIME));
+                    String description = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_DESCRIPTION));
+                    String location = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_LOCATION));
+                    String startDate = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_START_DATE));
+                    String endDate = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_END_DATE));
 
-        if (cursor.moveToFirst()) {
-            do {
-                String type = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_TYPE));
-                String id = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_ID));
-                String publicationTime = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_PUBLICATION_TIME));
-                String description = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_DESCRIPTION));
-                String location = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_LOCATION));
-                String startDate = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_START_DATE));
-                String endDate = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_END_DATE));
-
-                Roadwork roadwork;
-                if ("Current".equals(type)) {
-                    roadwork = new CurrentRoadwork(id, publicationTime, description, location, startDate, endDate);
-                } else {
-                    roadwork = new FutureRoadwork(id, publicationTime, description, location, startDate, endDate);
-                }
-                roadworks.add(roadwork);
-            } while (cursor.moveToNext());
+                    Roadwork roadwork;
+                    if ("Current".equals(type)) {
+                        roadwork = new CurrentRoadwork(id, publicationTime, description, location, startDate, endDate);
+                    } else {
+                        roadwork = new FutureRoadwork(id, publicationTime, description, location, startDate, endDate);
+                    }
+                    roadworks.add(roadwork);
+                } while (cursor.moveToNext());
+            }
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+            db.close();
         }
-        cursor.close();
-        db.close();
         return roadworks;
     }
 
