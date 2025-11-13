@@ -116,7 +116,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     /**
      * Checks if the device has an active network connection.
-     * Uses modern NetworkCapabilities API (available since API 23, minSdk is 33).
+     * Uses modern NetworkCapabilities API (available since API 23, minSdk is 24).
      *
      * @return true if a network connection is available, false otherwise.
      */
