@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      */
     private String getAuthHeader() {
         String auth = BuildConfig.CLIENT_ID + ":" + BuildConfig.CLIENT_KEY;
-        // minSdk is 33 (Android 13), so java.util.Base64 is always available (API 26+)
+        // minSdk is 24 (Android 7.0), so java.util.Base64 is always available (API 26+)
         return "Basic " + java.util.Base64.getEncoder().encodeToString(auth.getBytes());
     }
     /**
