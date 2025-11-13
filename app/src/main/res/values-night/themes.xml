@@ -1,10 +1,25 @@
 <resources>
-    <!-- Base application theme. -->
-    <style name="Theme.Lockhart_Antony_S2040920" parent="Theme.AppCompat.DayNight.DarkActionBar">
-        <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/DarkSlateGray</item>
-        <item name="colorPrimaryDark">@color/DimGray</item>
-        <item name="colorAccent">@color/SlateGray</item>
-        <!-- Customize your theme here. -->
+    <!-- Base application theme for dark mode using Material Design 3. -->
+    <style name="Theme.Lockhart_Antony_S2040920" parent="Theme.Material3.DayNight">
+        <!-- Primary brand color for dark mode. -->
+        <item name="colorPrimary">@color/SlateGray</item>
+        <item name="colorOnPrimary">@android:color/white</item>
+        <item name="colorPrimaryContainer">@color/DarkSlateGray</item>
+        <item name="colorOnPrimaryContainer">@android:color/white</item>
+
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/SlateGray</item>
+        <item name="colorOnSecondary">@android:color/black</item>
+
+        <!-- Surface colors for dark mode. -->
+        <item name="colorSurface">@color/DarkSlateGray</item>
+        <item name="colorOnSurface">@android:color/white</item>
+
+        <!-- Background colors for dark mode. -->
+        <item name="android:colorBackground">@color/DimGray</item>
+        <item name="colorOnBackground">@android:color/white</item>
+
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor">?attr/colorPrimaryContainer</item>
     </style>
 </resources>

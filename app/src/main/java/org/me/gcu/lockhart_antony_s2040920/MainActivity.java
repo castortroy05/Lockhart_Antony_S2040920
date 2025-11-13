@@ -1,11 +1,8 @@
 package org.me.gcu.lockhart_antony_s2040920;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -31,10 +28,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static final String CURRENT_ROADWORKS = "CurrentRoadworks/Content.xml";
     public static final String CURRENT_INCIDENTS = "UnplannedEvents/Content.xml";
 
-    // API credentials for authentication
-    private static final String CLIENT_ID = "3c3b2e71-9588-4974-b6cd-20fbb54a202e";
-    private static final String CLIENT_KEY = "P62cRj3YWx-3X8qJlSkyZdVr.RI0kgepLinmFYCuev0qe9u.NnTAf.3G2Bt4KZyx";
-
     /**
      * Called when the activity is first created.
      * Sets up the user interface and initializes button click listeners.
@@ -59,14 +52,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         currentButton.setOnClickListener(this);
         allButton.setOnClickListener(this);
     }
-    @SuppressLint("ObsoleteSdkInt")
+
+    /**
+     * Generates the HTTP Basic Authentication header using BuildConfig credentials.
+     *
+     * @return The Base64-encoded authentication header string.
+     */
     private String getAuthHeader() {
         String auth = BuildConfig.CLIENT_ID + ":" + BuildConfig.CLIENT_KEY;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            return "Basic " + java.util.Base64.getEncoder().encodeToString(auth.getBytes());
-        } else {
-            return "Basic " + android.util.Base64.encodeToString(auth.getBytes(), android.util.Base64.NO_WRAP);
-        }
+        // minSdk is 33 (Android 13), so java.util.Base64 is always available (API 26+)
+        return "Basic " + java.util.Base64.getEncoder().encodeToString(auth.getBytes());
     }
     /**
      * Handles click events for all buttons in the activity.
@@ -121,35 +116,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     /**
      * Checks if the device has an active network connection.
-     * This method is backwards compatible and uses different APIs based on the Android version.
+     * Uses modern NetworkCapabilities API (available since API 23, minSdk is 33).
      *
      * @return true if a network connection is available, false otherwise.
      */
-    @SuppressLint("ObsoleteSdkInt")
-    @SuppressWarnings({"deprecation"})    // Suppress deprecation warnings for NetworkInfo
-
     private boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         if (connectivityManager == null) {
             return false;
         }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            // For Android 6.0 (API 23) and above
-            android.net.Network network = connectivityManager.getActiveNetwork();
-            if (network == null) {
-                return false;
-            }
-            android.net.NetworkCapabilities capabilities = connectivityManager.getNetworkCapabilities(network);
-            return capabilities != null && (
-                    capabilities.hasTransport(android.net.NetworkCapabilities.TRANSPORT_WIFI) ||
-                            capabilities.hasTransport(android.net.NetworkCapabilities.TRANSPORT_CELLULAR) ||
-                            capabilities.hasTransport(android.net.NetworkCapabilities.TRANSPORT_ETHERNET));
-        } else {
-            // For Android versions below 6.0
-            NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-            return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+        android.net.Network network = connectivityManager.getActiveNetwork();
+        if (network == null) {
+            return false;
         }
+        android.net.NetworkCapabilities capabilities = connectivityManager.getNetworkCapabilities(network);
+        return capabilities != null && (
+                capabilities.hasTransport(android.net.NetworkCapabilities.TRANSPORT_WIFI) ||
+                        capabilities.hasTransport(android.net.NetworkCapabilities.TRANSPORT_CELLULAR) ||
+                        capabilities.hasTransport(android.net.NetworkCapabilities.TRANSPORT_ETHERNET));
     }
 
 
