@@ -46,11 +46,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Button plannedButton = findViewById(R.id.plannedButton);
         Button currentButton = findViewById(R.id.currentButton);
         Button allButton = findViewById(R.id.allButton);
+        Button roadSignButton = findViewById(R.id.roadSignButton);
 
         incidentButton.setOnClickListener(this);
         plannedButton.setOnClickListener(this);
         currentButton.setOnClickListener(this);
         allButton.setOnClickListener(this);
+        roadSignButton.setOnClickListener(this);
     }
 
     /**
@@ -72,13 +74,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      */
     @Override
     public void onClick(View v) {
+        int id = v.getId();
+
+        // Road Sign Display doesn't require network check
+        if (id == R.id.roadSignButton) {
+            Intent intent = new Intent(this, RoadSignActivity.class);
+            startActivity(intent);
+            return;
+        }
+
+        // All other buttons require network
         if (!isNetworkAvailable()) {
             showNetworkAlert();
             return;
         }
 
         String urlSource;
-        int id = v.getId();
         if (id == R.id.incidentButton) {
             urlSource = Constants.DATEX_BASE_URL + Constants.CURRENT_INCIDENTS;
         } else if (id == R.id.plannedButton) {
